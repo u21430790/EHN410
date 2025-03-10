@@ -25,7 +25,10 @@ import numpy as np
 # ----------------------------------------------------------------------------------------------------
 def test():
     key = "monarchy"
-    playfair_get_key(True,key)
+    key_m = playfair_get_key(True,key)
+    print(key_m)
+    x = playfair_get_pos_in_key("m","f",key_m)
+    print(x)
 
 def playfair_get_key(isText: bool, key: str) -> np.ndarray: # 3.1.1
     if isText:
@@ -46,13 +49,27 @@ def playfair_get_key(isText: bool, key: str) -> np.ndarray: # 3.1.1
             y+=1
         key_matrix = np.array(key_matrix)
         key_matrix= key_matrix.reshape(5,5)
-        print(key_matrix)
-        return 
+
+        return  key_matrix
     else:
         return
     
 def playfair_get_pos_in_key(val, val2, keyMat: np.ndarray) -> np.ndarray: # 3.1.2
-    return
+    x_val_1 =-1
+    y_val_1 = -1
+    x_val_2= -1
+    y_val_2 = -1
+
+    for i in range(keyMat.shape[0]):
+        for j in range(keyMat.shape[1]):
+            if val == keyMat[i][j]:
+                x_val_1 = i
+                y_val_1 = j
+            if val2 == keyMat[i][j]:
+                x_val_2 = i
+                y_val_2 = j
+    pos = np.array([x_val_1,y_val_1,x_val_2,y_val_2])
+    return pos
 
 def playfair_get_encryption_pos(pos: np.ndarray, keyMat: np.ndarray) -> np.ndarray: # 3.1.3
     return
