@@ -27,8 +27,11 @@ def test():
     key = "monarchy"
     key_m = playfair_get_key(True,key)
     print(key_m)
-    x = playfair_get_pos_in_key("m","f",key_m)
+    x = playfair_get_pos_in_key("h","s",key_m)
     print(x)
+    print(playfair_get_encryption_pos(x,key_m))
+
+##############################################################################################################
 
 def playfair_get_key(isText: bool, key: str) -> np.ndarray: # 3.1.1
     if isText:
@@ -76,16 +79,18 @@ def playfair_get_encryption_pos(pos: np.ndarray, keyMat: np.ndarray) -> np.ndarr
     y_len = keyMat.shape[1]
 
     if pos[0] == pos[2]:
-        pos[0] +=1 if pos[0]<x_len else 0 
-        pos[2] +=1 if pos[2]< x_len else 0
+        pos[1] = pos[1] + 1 if pos[1] < x_len - 1 else 0
+        pos[3] = pos[3] +1 if pos[3]< x_len-1 else 0
         return pos
     
     if pos[1] == pos[3]:
-        pos[1] +=1 if pos[3]<y_len else 0 
-        pos[1] +=1 if pos[3]< y_len else 0
+        pos[0] = pos[0] +1 if pos[0]<y_len-1 else 0 
+        pos[2] =pos[2]+1 if pos[2]< y_len-1 else 0
         return pos
     else:
+        temp = pos[1]
         pos[1] = pos[3]
+        pos[3] = temp
         return pos
 
 def playfair_get_decryption_pos(pos: np.ndarray, keyMat: np.ndarray) -> np.ndarray: # 3.1.4
@@ -93,16 +98,18 @@ def playfair_get_decryption_pos(pos: np.ndarray, keyMat: np.ndarray) -> np.ndarr
     y_len = keyMat.shape[1]
 
     if pos[0] == pos[2]:
-        pos[0] -=1 if pos[0]!=0 else x_len 
-        pos[2] -=1 if pos[2]!= 0 else x_len
+        pos[1] = pos[1] -1 if pos[1]!=0 else x_len-1 
+        pos[3] = pos[3]-1 if pos[3]!= 0 else x_len-1
         return pos
     
     if pos[1] == pos[3]:
-        pos[1] -=1 if pos[3]!=0 else y_len 
-        pos[1] -=1 if pos[3]!=0 else y_len
+        pos[0] = pos[0]-1 if pos[0]!=0 else y_len-1
+        pos[2] = pos[2]-1 if pos[2]!=0 else y_len-1
         return pos
     else:
+        temp = pos[1]
         pos[1] = pos[3]
+        pos[3] = temp
         return pos
 
 def playfair_preprocess_text(plaintext: str) -> str: # 3.1.5
