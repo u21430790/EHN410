@@ -72,10 +72,38 @@ def playfair_get_pos_in_key(val, val2, keyMat: np.ndarray) -> np.ndarray: # 3.1.
     return pos
 
 def playfair_get_encryption_pos(pos: np.ndarray, keyMat: np.ndarray) -> np.ndarray: # 3.1.3
-    return
+    x_len = keyMat.shape[0]
+    y_len = keyMat.shape[1]
+
+    if pos[0] == pos[2]:
+        pos[0] +=1 if pos[0]<x_len else 0 
+        pos[2] +=1 if pos[2]< x_len else 0
+        return pos
+    
+    if pos[1] == pos[3]:
+        pos[1] +=1 if pos[3]<y_len else 0 
+        pos[1] +=1 if pos[3]< y_len else 0
+        return pos
+    else:
+        pos[1] = pos[3]
+        return pos
 
 def playfair_get_decryption_pos(pos: np.ndarray, keyMat: np.ndarray) -> np.ndarray: # 3.1.4
-    return
+    x_len = keyMat.shape[0]
+    y_len = keyMat.shape[1]
+
+    if pos[0] == pos[2]:
+        pos[0] -=1 if pos[0]!=0 else x_len 
+        pos[2] -=1 if pos[2]!= 0 else x_len
+        return pos
+    
+    if pos[1] == pos[3]:
+        pos[1] -=1 if pos[3]!=0 else y_len 
+        pos[1] -=1 if pos[3]!=0 else y_len
+        return pos
+    else:
+        pos[1] = pos[3]
+        return pos
 
 def playfair_preprocess_text(plaintext: str) -> str: # 3.1.5
     return
