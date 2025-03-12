@@ -19,19 +19,67 @@ IMPORTANT!!
 
 import string
 import numpy as np
-
+from PIL import Image
+import matplotlib.pyplot as plt
 
 # 3.1 Playfair Cipher
 # ----------------------------------------------------------------------------------------------------
 def test():
-    key = "monarchy"
-    key_m = playfair_get_key(True,key)
-    #print(key_m)
-    x = playfair_get_pos_in_key("h","s",key_m)
-    #print(x)
-    #print(playfair_get_encryption_pos(x,key_m))
-    y = playfair_encrypt_text("balloon",key)
-    print(y)
+    # PLAYFAIR
+    
+    # key = "monarchy"
+    # key_m = playfair_get_key(True,key)
+    # #print(key_m)
+    # x = playfair_get_pos_in_key("h","s",key_m)
+    # #print(x)
+    # #print(playfair_get_encryption_pos(x,key_m))
+    # y = playfair_encrypt_text("balloon",key)
+    # print(y)
+    # z = playfair_decrypt_text(y,key)
+    # print(z)
+
+    # HILL
+
+    #key = hill_get_key(True,"abcd")
+    #vals = hill_pre_process_text("abcd",9)
+    #print(key)
+    #print(vals)
+    image_path = "emoji.jpg"  # Replace with your image path
+    img = Image.open(image_path)
+    img_array = np.array(img)
+
+# Display the original image
+    plt.figure(figsize=(10, 4))
+    plt.subplot(1, 3, 1)
+    plt.imshow(img_array)
+    plt.title("Original Image")
+
+# Encrypt the image
+    key = "secretkey123"
+    encrypted = playfair_encrypt_image(img_array, key)
+
+# Display the encrypted data (reshaped for visualization)
+    encrypted_img = playfair_convert_to_image(encrypted, img_array.shape)
+    plt.subplot(1, 3, 2)
+    plt.imshow(encrypted_img)
+    plt.title("Encrypted Image")
+
+# Decrypt the image
+    decrypted = playfair_decrypt_image(True, encrypted, key)
+    decrypted_img = playfair_convert_to_image(decrypted, img_array.shape)
+
+# Display the decrypted image
+    plt.subplot(1, 3, 3)
+    plt.imshow(decrypted_img)
+    plt.title("Decrypted Image")
+
+    plt.tight_layout()
+    plt.show()
+
+# Compare the original and decrypted images
+    differences = np.sum(img_array != decrypted_img)
+    print(f"Number of different pixels: {differences}")
+    print(f"Percentage difference: {differences / img_array.size * 100:.4f}%")
 ##############################################################################################################
 
 def playfair_get_key(isText: bool, key: str) -> np.ndarray: # 3.1.1
@@ -56,7 +104,24 @@ def playfair_get_key(isText: bool, key: str) -> np.ndarray: # 3.1.1
 
         return  key_matrix
     else:
-        return
+        unique_chars = []
+        for char in key:
+            if char not in unique_chars:
+                unique_chars.append(char)
+        
+        ascii_values = [ord(char) % 256 for char in unique_chars]
+        
+
+        all_values = list(range(256))
+        for val in ascii_values:
+            if val in all_values:
+                all_values.remove(val)
+    
+        key_values = ascii_values + all_values
+
+        key_matrix = np.array(key_values).reshape(16, 16)
+        
+        return key_matrix
     
 def playfair_get_pos_in_key(val, val2, keyMat: np.ndarray) -> np.ndarray: # 3.1.2
     x_val_1 =-1
@@ -153,22 +218,90 @@ def playfair_encrypt_text(plaintext: str, key: str) -> str: # 3.1.6
     return cipher
 
 def playfair_decrypt_text(ciphertext: str, key: str) -> str: # 3.1.7
-    return
+    #new_text = playfair_preprocess_text(ciphertext)
+    key_matrix = playfair_get_key(True,key)
+    plaintext = ""
+    for i in range(0,len(ciphertext),2):
+        x = ciphertext[i]
+        y = ciphertext[i+1]
+        pos= playfair_get_pos_in_key(x,y,key_matrix)
+        new_pos = playfair_get_decryption_pos(pos,key_matrix)
+        plaintext = plaintext + key_matrix[new_pos[0]][new_pos[1]] + key_matrix[new_pos[2]][new_pos[3]]
+    
+    x= 0 
+    new_text = ""
+    while x<len(plaintext):
+        if plaintext[x]!= 'x':
+            new_text = new_text+ plaintext[x]
+        x+=1
+    return new_text
 
 def playfair_preprocess_image(plaintext: np.ndarray) -> np.ndarray: # 3.1.8
-    return
+    flattened = plaintext.flatten()
+    flattened = np.where(flattened == 129, 128, flattened)
+    
+    if len(flattened) % 2 != 0:
+        flattened = np.append(flattened, 129)
+    
+    return flattened
 
 def playfair_remove_image_padding(plaintextWithPadding: np.ndarray) -> np.ndarray: # 3.1.9
-    return
+    new_text = []
+    for i in range(len(plaintextWithPadding)):
+        if plaintextWithPadding[i] != 129:
+            new_text.append(plaintextWithPadding[i])
+    return np.array(new_text)
 
 def playfair_encrypt_image(plaintext: np.ndarray, key: str) -> np.ndarray: # 3.1.10
-    return
+    processed_image = playfair_preprocess_image(plaintext)    
+    key_matrix = playfair_get_key(False, key)
+
+    ciphertext = np.zeros_like(processed_image)
+    for i in range(0, len(processed_image), 2):
+        if i+1 < len(processed_image):  
+            x = processed_image[i]
+            y = processed_image[i+1]
+            
+            pos = playfair_get_pos_in_key(x, y, key_matrix)
+
+            new_pos = playfair_get_encryption_pos(pos, key_matrix)
+            ciphertext[i] = key_matrix[new_pos[0]][new_pos[1]]
+            ciphertext[i+1] = key_matrix[new_pos[2]][new_pos[3]]
+    
+    return ciphertext
 
 def playfair_decrypt_image(removePadding: bool, ciphertext: np.ndarray, key: str) -> np.ndarray: # 3.1.11
-    return
+    key_matrix = playfair_get_key(False, key)   
+    plaintext = np.zeros_like(ciphertext)
+    
+    for i in range(0, len(ciphertext), 2):
+        if i+1 < len(ciphertext):  
+            x = ciphertext[i]
+            y = ciphertext[i+1]
+
+            pos = playfair_get_pos_in_key(x, y, key_matrix)
+            new_pos = playfair_get_decryption_pos(pos, key_matrix)
+            plaintext[i] = key_matrix[new_pos[0]][new_pos[1]]
+            plaintext[i+1] = key_matrix[new_pos[2]][new_pos[3]]
+    
+    if removePadding:
+        plaintext = playfair_remove_image_padding(plaintext)
+    
+    return plaintext
 
 def playfair_convert_to_image(imageData: np.ndarray, originalShape) -> np.ndarray: # 3.1.12
-    return
+
+    required_size = originalShape[0] * originalShape[1] * originalShape[2]
+    if len(imageData) < required_size:
+        padding_needed = required_size - len(imageData)
+        padded_data = np.pad(imageData, (0, padding_needed), 'constant', constant_values=0)
+        reshaped_image = padded_data.reshape(originalShape)
+    elif len(imageData) > required_size:
+        reshaped_image = imageData[:required_size].reshape(originalShape)
+    else:
+        reshaped_image = imageData.reshape(originalShape)
+    
+    return reshaped_image
 
 # ----------------------------------------------------------------------------------------------------
 
@@ -176,16 +309,53 @@ def playfair_convert_to_image(imageData: np.ndarray, originalShape) -> np.ndarra
 # ----------------------------------------------------------------------------------------------------
 
 def hill_get_key(isText:bool, key: str) -> np.ndarray: # 3.2.1
-    return
+    if isText:
+        key_list = list(key)
+        for i in range(len(key_list)):
+            key_list[i] = ord(key_list[i]) % 97
+        #print(key_list)
+        key_list  = np.array(key_list)
+        if len(key_list) == 4:
+            key_list = key_list.reshape(2,2)
+        if len(key_list) == 9:
+            key_list = key_list.reshape(3,3)
+
+        det = np.linalg.det(key_list)
+        #print(det)
+        if det == 0:
+            for i in range(key_list.shape[0]):
+                for j in range(key_list.shape[1]):
+                    key_list[i][j] = -1
+        return key_list
+    else:
+        return
 
 def hill_get_inv_key(isText: bool, keyMat: np.ndarray) -> np.ndarray: # 3.2.2
+
     return
 
 def hill_process_group(isText: bool, group: np.ndarray, keyMat: np.ndarray) -> np.ndarray: # 3.2.3
-    return
+    if isText:
+
+        return 
 
 def hill_pre_process_text(plaintext: str, keyLength: int) -> np.ndarray: # 3.2.4
-    return
+    alph = list(string.ascii_lowercase)
+    new_text =[]
+    for s in plaintext:
+        if s.lower() in alph:
+            new_text.append(s.lower())
+    if keyLength == 4:
+        while len(new_text) % 2 !=0:
+            new_text.append("x")
+    if keyLength == 9:
+        while len(new_text) % 3 !=0:
+            new_text.append("x")
+    
+    for i in range(len(new_text)):
+        new_text[i] = ord(new_text[i]) % 97
+    
+    return np.array(new_text)
 
 def hill_encrypt_text(plaintext: str, key: str) -> str: # 3.2.5
     return
