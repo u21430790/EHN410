@@ -26,11 +26,12 @@ import numpy as np
 def test():
     key = "monarchy"
     key_m = playfair_get_key(True,key)
-    print(key_m)
+    #print(key_m)
     x = playfair_get_pos_in_key("h","s",key_m)
-    print(x)
-    print(playfair_get_encryption_pos(x,key_m))
-
+    #print(x)
+    #print(playfair_get_encryption_pos(x,key_m))
+    y = playfair_preprocess_text("rob")
+    print(y)
 ##############################################################################################################
 
 def playfair_get_key(isText: bool, key: str) -> np.ndarray: # 3.1.1
@@ -113,7 +114,31 @@ def playfair_get_decryption_pos(pos: np.ndarray, keyMat: np.ndarray) -> np.ndarr
         return pos
 
 def playfair_preprocess_text(plaintext: str) -> str: # 3.1.5
-    return
+    alph = list(string.ascii_lowercase)
+    x=0
+    new_text = ""
+    while x<len(plaintext):
+        if plaintext[x].lower() in alph:
+            if plaintext[x].lower() == "j":
+                    new_text+= "i"
+            else:
+                    new_text+=plaintext[x].lower()
+                    
+        x+=1
+    y = 0
+    while y<len(new_text)-2:
+        x1 = new_text[y]
+        x2 = new_text[y+1]
+        
+        if x1 == x2:
+            new_text = new_text[:y+1]+'x' +new_text[y+1:]
+            y+=2
+        
+        else:
+            y+=2
+    if len(new_text) % 2 !=0:
+        new_text = new_text+ 'x'
+    return new_text
 
 def playfair_encrypt_text(plaintext: str, key: str) -> str: # 3.1.6
     return
