@@ -30,7 +30,7 @@ def test():
     x = playfair_get_pos_in_key("h","s",key_m)
     #print(x)
     #print(playfair_get_encryption_pos(x,key_m))
-    y = playfair_preprocess_text("rob")
+    y = playfair_encrypt_text("balloon",key)
     print(y)
 ##############################################################################################################
 
@@ -141,7 +141,16 @@ def playfair_preprocess_text(plaintext: str) -> str: # 3.1.5
     return new_text
 
 def playfair_encrypt_text(plaintext: str, key: str) -> str: # 3.1.6
-    return
+    new_text = playfair_preprocess_text(plaintext)
+    key_matrix = playfair_get_key(True,key)
+    cipher = ""
+    for i in range(0,len(new_text),2):
+        x = new_text[i]
+        y = new_text[i+1]
+        pos= playfair_get_pos_in_key(x,y,key_matrix)
+        new_pos = playfair_get_encryption_pos(pos,key_matrix)
+        cipher = cipher + key_matrix[new_pos[0]][new_pos[1]] + key_matrix[new_pos[2]][new_pos[3]]
+    return cipher
 
 def playfair_decrypt_text(ciphertext: str, key: str) -> str: # 3.1.7
     return
