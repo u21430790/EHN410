@@ -44,42 +44,50 @@ def test():
     #vals = hill_pre_process_text("abcd",9)
     #print(key)
     #print(vals)
-    image_path = "emoji.jpg"  # Replace with your image path
-    img = Image.open(image_path)
-    img_array = np.array(img)
+#     image_path = "emoji.jpg"  # Replace with your image path
+#     img = Image.open(image_path)
+#     img_array = np.array(img)
 
-# Display the original image
-    plt.figure(figsize=(10, 4))
-    plt.subplot(1, 3, 1)
-    plt.imshow(img_array)
-    plt.title("Original Image")
+# # Display the original image
+#     plt.figure(figsize=(10, 4))
+#     plt.subplot(1, 3, 1)
+#     plt.imshow(img_array)
+#     plt.title("Original Image")
 
-# Encrypt the image
-    key = "secretkey123"
-    encrypted = playfair_encrypt_image(img_array, key)
+# # Encrypt the image
+#     key = "secretkey123"
+#     encrypted = playfair_encrypt_image(img_array, key)
 
-# Display the encrypted data (reshaped for visualization)
-    encrypted_img = playfair_convert_to_image(encrypted, img_array.shape)
-    plt.subplot(1, 3, 2)
-    plt.imshow(encrypted_img)
-    plt.title("Encrypted Image")
+# # Display the encrypted data (reshaped for visualization)
+#     encrypted_img = playfair_convert_to_image(encrypted, img_array.shape)
+#     plt.subplot(1, 3, 2)
+#     plt.imshow(encrypted_img)
+#     plt.title("Encrypted Image")
 
-# Decrypt the image
-    decrypted = playfair_decrypt_image(True, encrypted, key)
-    decrypted_img = playfair_convert_to_image(decrypted, img_array.shape)
+# # Decrypt the image
+#     decrypted = playfair_decrypt_image(True, encrypted, key)
+#     decrypted_img = playfair_convert_to_image(decrypted, img_array.shape)
 
-# Display the decrypted image
-    plt.subplot(1, 3, 3)
-    plt.imshow(decrypted_img)
-    plt.title("Decrypted Image")
+# # Display the decrypted image
+#     plt.subplot(1, 3, 3)
+#     plt.imshow(decrypted_img)
+#     plt.title("Decrypted Image")
 
-    plt.tight_layout()
-    plt.show()
+#     plt.tight_layout()
+#     plt.show()
 
-# Compare the original and decrypted images
-    differences = np.sum(img_array != decrypted_img)
-    print(f"Number of different pixels: {differences}")
-    print(f"Percentage difference: {differences / img_array.size * 100:.4f}%")
+# # Compare the original and decrypted images
+#     differences = np.sum(img_array != decrypted_img)
+#     print(f"Number of different pixels: {differences}")
+#     print(f"Percentage difference: {differences / img_array.size * 100:.4f}%")
+
+
+
+    key = "azAZ!@12"
+    plaintext = "attackpostponeduntiltwoam"
+    x =row_gen_key(key)
+    print(x)
+
 ##############################################################################################################
 
 def playfair_get_key(isText: bool, key: str) -> np.ndarray: # 3.1.1
@@ -331,13 +339,59 @@ def hill_get_key(isText:bool, key: str) -> np.ndarray: # 3.2.1
         return
 
 def hill_get_inv_key(isText: bool, keyMat: np.ndarray) -> np.ndarray: # 3.2.2
-
-    return
+    if isText:
+        # For text, modulo is 26
+        modulus = 26
+    else:
+        # For images, modulo is 256
+        modulus = 256
+    
+    # Get the size of the matrix
+    n = keyMat.shape[0]
+    
+    # Calculate the determinant
+    det = int(round(np.linalg.det(keyMat))) % modulus
+    
+    # Find modular multiplicative inverse of determinant
+    det_inv = None
+    for i in range(1, modulus):
+        if (det * i) % modulus == 1:
+            det_inv = i
+            break
+    
+    if det_inv is None:
+        # Return a matrix of -1 if inverse doesn't exist
+        return np.full(keyMat.shape, -1)
+    
+    # Calculate the adjugate matrix
+    if n == 2:
+        adj = np.array([
+            [keyMat[1, 1], -keyMat[0, 1]],
+            [-keyMat[1, 0], keyMat[0, 0]]
+        ])
+    else:  # n == 3
+        adj = np.zeros((3, 3), dtype=int)
+        for i in range(3):
+            for j in range(3):
+                # Get the minor by excluding row i and column j
+                minor = np.delete(np.delete(keyMat, i, axis=0), j, axis=1)
+                # Calculate the cofactor
+                cofactor = int(round(np.linalg.det(minor))) * (-1)**(i+j)
+                # Store in adjugate (transpose of cofactor matrix)
+                adj[j, i] = cofactor % modulus
+    
+    # Calculate the inverse: (det_inv * adj) % modulus
+    inv_key = (det_inv * adj) % modulus
+    
+    return inv_key
 
 def hill_process_group(isText: bool, group: np.ndarray, keyMat: np.ndarray) -> np.ndarray: # 3.2.3
     if isText:
-
-        return 
+        result = np.dot(keyMat, group) % 26
+        return result
+    else:
+        result = np.dot(keyMat, group) % 256
+        return result
 
 def hill_pre_process_text(plaintext: str, keyLength: int) -> np.ndarray: # 3.2.4
     alph = list(string.ascii_lowercase)
@@ -381,7 +435,21 @@ def hill_convert_to_image(imageData: np.ndarray, originalShape) -> np.ndarray: #
 # ----------------------------------------------------------------------------------------------------
 
 def row_gen_key(key: str) -> np.ndarray: # 3.3.1
-    return
+    ascii_key = []
+    new_key = []
+    key_matrix = []
+    for x in key:
+        if x not in new_key:
+            new_key.append(x)
+
+    for i in new_key:
+        ascii_key.append(ord(i))
+
+    sorted_ascii = list(ascii_key)
+    sorted_ascii.sort()
+    for i in sorted_ascii:
+        key_matrix.append(ascii_key.index(i))
+    return np.array(key_matrix)
 
 def row_pad_text(plaintext: str, key: np.ndarray) -> str: # 3.3.2
     return
