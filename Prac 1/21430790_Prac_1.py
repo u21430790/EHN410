@@ -314,22 +314,18 @@ def hill_get_inv_key(isText: bool, keyMat: np.ndarray) -> np.ndarray:  # 3.2.2
     # Find modular multiplicative inverse of the determinant
     det_inv = pow(det, -1, mod)
     
-    # Calculate the adjugate matrix (transpose of cofactor matrix)
+    # Calculate the adjugate matrix 
     n = keyMat.shape[0]
     adj = np.zeros(keyMat.shape, dtype=int)
     
     for i in range(n):
         for j in range(n):
-            # Get the minor by removing row i and column j
             minor = np.delete(np.delete(keyMat, i, axis=0), j, axis=1)
-            # Calculate the cofactor (determinant of minor with sign)
             cofactor = round(np.linalg.det(minor))
-            # Apply the sign rule (-1)^(i+j)
             cofactor *= (-1) ** (i + j)
-            # Store in the adjugate matrix (transpose of cofactor matrix)
             adj[j, i] = cofactor
     
-    # Calculate the inverse key using the formula: K^(-1) = (det_inv * adj) mod M
+    # Calculate the inverse key 
     inv_key = (det_inv * adj) % mod
     
     return inv_key
