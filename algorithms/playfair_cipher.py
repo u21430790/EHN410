@@ -23,7 +23,7 @@ def get_key(key:str):
     return key_matrix
 
 def get_pos_in_key(val1,val2,keyMat):
-    itemindex = np.where(keyMat == val)
+    itemindex = np.where(keyMat == val1)
     itemindex2 = np.where(keyMat == val2)
     return np.array([itemindex[0][0], itemindex[1][0], itemindex2[0][0], itemindex2[1][0]], dtype=int)
 
