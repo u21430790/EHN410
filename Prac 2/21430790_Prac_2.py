@@ -27,95 +27,98 @@ Changelog:
  
 '''
 
+def test_DES():
+    print(des_XOR('1A3F', 'B7C2'))
+
 
 # ----------------------------------------------------------------------------------------------
 # 3.1 AES Cipher
 # ----------------------------------------------------------------------------------------------
 
 def aes_Generate_Round_Keys(key: str, sBox: np.ndarray) -> np.ndarray: # 1
-    raise Exception("Not Implemented.")
+    return
 
 
 def aes_Preprocess_String_Plaintext(plaintext: str) -> np.ndarray: # 2
-    raise Exception("Not Implemented.")
+    return
 
 
 def aes_Create_Input_States(inputBytes: np.ndarray) -> np.ndarray: # 3
-    raise Exception("Not Implemented.")
+    return
 
 
 def aes_remove_Padding(paddedArray: np.ndarray) -> np.ndarray: # 4
-    raise Exception("Not Implemented.")
+    return
 
 
 def aes_Encrypt_String(plaintext: str, key: str) -> np.ndarray: # 5
     sBox = np.load("AES_Arrays\\AES_Sbox_lookup.npy")
-    raise Exception("Not Implemented.")
+    return
 
 
 def aes_Decrypt_String(ciphertext: np.ndarray, key: str) -> str: # 6
     sBox = np.load("AES_Arrays\\AES_Sbox_lookup.npy")
     invsBox = np.load("AES_Arrays\\AES_Inverse_Sbox_lookup.npy")
-    raise Exception("Not Implemented.")
+    return
 
 
 def aes_Preprocess_Image_Plaintext(plaintext: np.ndarray) -> np.ndarray: # 7
-    raise Exception("Not Implemented.")
+    return
 
 
 def aes_Encrypt_Image(plaintext: np.ndarray, key: str) -> np.ndarray: # 8
     sBox = np.load("AES_Arrays\\AES_Sbox_lookup.npy")
-    raise Exception("Not Implemented.")
+    return
 
 
 def aes_Decrypt_Image(ciphertext: np.ndarray, key: str) -> np.ndarray: # 9
     sBox = np.load("AES_Arrays\\AES_Sbox_lookup.npy")
     invsBox = np.load("AES_Arrays\\AES_Inverse_Sbox_lookup.npy")
-    raise Exception("Not Implemented.")
+    return
 
 
 def aes_Add_Round_key(state: np.ndarray, roundKey: np.ndarray) -> np.ndarray: # 10
-    raise Exception("Not Implemented.")
+    return
 
 
 def aes_Substitute_Bytes(state: np.ndarray, sBox: np.ndarray) -> np.ndarray: # 11
-    raise Exception("Not Implemented.")
+    return
 
 
 def aes_Shift_Rows_Encrypt(state: np.ndarray) -> np.ndarray: # 12
-    raise Exception("Not Implemented.")
+    return
 
 
 def aes_Shift_Rows_Decrypt(state: np.ndarray) -> np.ndarray: # 13
-    raise Exception("Not Implemented.")
+    return
 
 
 def aes_Mix_Columns_Encrypt(state: np.ndarray) -> np.ndarray: # 14
-    raise Exception("Not Implemented.")
+    return
 
 
 def aes_Mix_Columns_Decrypt(state: np.ndarray) -> np.ndarray: # 15
-    raise Exception("Not Implemented.")
+    return
 
 
 def aes_Apply_Encryption_Round(state: np.ndarray, roundKey: np.ndarray, sBox: np.ndarray) -> np.ndarray: # 16
-    raise Exception("Not Implemented.")
+    return
 
 
 def aes_Encrypt_State(state: np.ndarray, roundKeys: np.ndarray, sBox: np.ndarray) -> np.ndarray: # 17
-    raise Exception("Not Implemented.")
+    return
 
 
 def aes_Apply_Decryption_Round(state: np.ndarray, roundKey: np.ndarray, sBox: np.ndarray) -> np.ndarray: # 18
-    raise Exception("Not Implemented.")
+    return
 
 
 def aes_Decrypt_State(state: np.ndarray, roundKeys: np.ndarray, sBox: np.ndarray) -> np.ndarray: # 19
-    raise Exception("Not Implemented.")
+    return
 
 
 def aes_des_rc4_Convert_To_Image(arrayToConvert: np.ndarray, originalShape: tuple) -> np.ndarray: # 20
-    raise Exception("Not Implemented.")
+    return
 
 
 # ----------------------------------------------------------------------------------------------
@@ -123,19 +126,19 @@ def aes_des_rc4_Convert_To_Image(arrayToConvert: np.ndarray, originalShape: tupl
 # ----------------------------------------------------------------------------------------------
 
 def des_Generate_Round_Keys(key: str, permutedChoice1, permutedChoice2, roundShifts) -> np.ndarray: # 1
-    raise Exception("Not Implemented.")
+    return
 
 
 def des_Preprocess_String_Plaintext(plaintext: str) -> np.ndarray: # 2
-    raise Exception("Not Implemented.")
+    return
 
 
 def des_Create_Input_Blocks(processedArray: np.ndarray) -> np.ndarray: # 3
-    raise Exception("Not Implemented.")
+    return
 
 
 def des_Remove_String_Padding(paddedArray: np.ndarray) -> np.ndarray: # 4
-    raise Exception("Not Implemented.")
+    return
 
 
 def des_Encrypt_String(plaintext: str, key: str) -> np.ndarray: # 5
@@ -147,37 +150,37 @@ def des_Encrypt_String(plaintext: str, key: str) -> np.ndarray: # 5
     FpermutationChoice = np.load("DES_Arrays\\DES_F_Function_Permutation.npy")
     initPerm = np.load("DES_Arrays\\DES_Initial_Permutation.npy")
     invInitPerm = np.load("DES_Arrays\\DES_Inverse_Initial_Permutation.npy")
-    raise Exception("Not Implemented.")
+    return
 
 
 def des_Decrypt_String(ciphertext: np.ndarray, key: str) -> str: # 6
     keyPermChoice1 = np.load("DES_Arrays\\DES_Key_Permutation_Choice_1.npy")
-    keyPermChoice2 = np.load("DES_Arrays\\DES_Key_Permutation_Choice_2.npy")
+    k0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000eyPermChoice2 = np.load("DES_Arrays\\DES_Key_Permutation_Choice_2.npy")
     keyRoundShifts = np.load("DES_Arrays\\DES_Round_Shifts.npy")
     sBoxes = np.load("DES_Arrays\\DES_sBoxes.npy")
     FexpansionBox = np.load("DES_Arrays\\DES_Expansion_Box.npy")
     FpermutationChoice = np.load("DES_Arrays\\DES_F_Function_Permutation.npy")
     initPerm = np.load("DES_Arrays\\DES_Initial_Permutation.npy")
     invInitPerm = np.load("DES_Arrays\\DES_Inverse_Initial_Permutation.npy")
-    raise Exception("Not Implemented.")
+    return
 
 
 def des_Process_Block(block: str, roundKeys: np.ndarray, initialPerm: np.ndarray, sBoxes: np.ndarray,
                       expansionBox: np.ndarray, FpermChoice: np.ndarray, invInitialPerm: np.ndarray) -> str: # 7
-    raise Exception("Not Implemented.")
+    return
 
 
 def des_Process_Round(roundInputValue: str, roundKey: str, sBoxes: np.ndarray, expansionBox: np.ndarray, 
                       permutationChoice: np.ndarray) -> str: # 8
-    raise Exception("Not Implemented.")
+    return
 
 
 def des_Preprocess_Image_Plaintext(plaintext: np.ndarray) -> np.ndarray: # 9
-    raise Exception("Not Implemented.")
+    return
 
 
 def des_Remove_Image_Padding(paddedArray: np.ndarray) -> np.ndarray: # 10
-    raise Exception("Not Implemented.")
+    return
 
 
 def des_Encrypt_Image(plaintext: np.ndarray, key: str) -> np.ndarray: # 11
@@ -189,7 +192,7 @@ def des_Encrypt_Image(plaintext: np.ndarray, key: str) -> np.ndarray: # 11
     FpermutationChoice = np.load("DES_Arrays\\DES_F_Function_Permutation.npy")
     initPerm = np.load("DES_Arrays\\DES_Initial_Permutation.npy")
     invInitPerm = np.load("DES_Arrays\\DES_Inverse_Initial_Permutation.npy")
-    raise Exception("Not Implemented.")
+    return
 
 
 def des_Decrypt_Image(ciphertext: np.ndarray, key: str) -> np.ndarray: # 12
@@ -201,23 +204,30 @@ def des_Decrypt_Image(ciphertext: np.ndarray, key: str) -> np.ndarray: # 12
     FpermutationChoice = np.load("DES_Arrays\\DES_F_Function_Permutation.npy")
     initPerm = np.load("DES_Arrays\\DES_Initial_Permutation.npy")
     invInitPerm = np.load("DES_Arrays\\DES_Inverse_Initial_Permutation.npy")
-    raise Exception("Not Implemented.")
+    return
 
 
 def des_Apply_Permutation(valueToPermute: str, permuteTable: np.ndarray, numBitsBeforePermute: int) -> str: # 13
-    raise Exception("Not Implemented.")
+    return
 
 
 def des_Split_In_Two(inputValue: str) -> np.ndarray: # 14
-    raise Exception("Not Implemented.")
+    return
 
 
 def des_XOR(value1: str, value2: str) -> str: # 15
-    raise Exception("Not Implemented.")
+    int1 = int(value1,16)
+    int2 = int(value2,16)
+
+    xored  = int1^int2
+
+    return f'{xored:0X}'
 
 
 def des_left_Shift(inputValue: str, shiftCount: int) -> str: # 16
-    raise Exception("Not Implemented.")
+    int1 = int(inputValue,16)
+    
+    return
 
 
 # ----------------------------------------------------------------------------------------------
@@ -225,36 +235,38 @@ def des_left_Shift(inputValue: str, shiftCount: int) -> str: # 16
 # ----------------------------------------------------------------------------------------------
 
 def rc4_Init_S_T(key: str) -> np.ndarray: # 1
-    raise Exception("Not Implemented.")
+    return
 
 
 def rc4_Init_Permute_S(sArray: np.ndarray, tArray: np.ndarray) -> np.ndarray: # 2
-    raise Exception("Not Implemented.")
+    return
 
 
 def rc4_Generate_Stream_Iteration(i: int, j: int, sArray: np.ndarray) -> tuple: # 3
-    raise Exception("Not Implemented.")
+    return
 
 
 def rc4_Process_Byte(byteToProcess: int, k: int) -> int: # 4
-    raise Exception("Not Implemented.")
+    return
 
 
 def rc4_Encrypt_String(plaintext: str, key: str) -> np.ndarray: # 5
-    raise Exception("Not Implemented.")
+    return
 
 
 def rc4_Decrypt_String(ciphertext: np.ndarray, key: str) -> str: # 6
-    raise Exception("Not Implemented.")
+    return
 
 
 def rc4_Encrypt_Image(plaintext: np.ndarray, key: str) -> np.ndarray: # 7
-    raise Exception("Not Implemented.")
+    return
 
 
 def rc4_Decrypt_Image(ciphertext: np.ndarray, key: str) -> np.ndarray: # 8
-    raise Exception("Not Implemented.")
+    return
 
 
 # ----------------------------------------------------------------------------------------------
 # ----------------------------------------------------------------------------------------------
+
+test_DES()
