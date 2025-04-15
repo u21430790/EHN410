@@ -28,8 +28,8 @@ Changelog:
 '''
 
 def test_DES():
-    print(des_XOR('1A3F', 'B7C2'))
-
+    #print(des_XOR('1A3F', 'B7C2'))
+    print(des_left_Shift('1A3F', 4))
 
 # ----------------------------------------------------------------------------------------------
 # 3.1 AES Cipher
@@ -221,13 +221,24 @@ def des_XOR(value1: str, value2: str) -> str: # 15
 
     xored  = int1^int2
 
-    return f'{xored:0X}'
+    return f'{xored:04X}'
 
 
 def des_left_Shift(inputValue: str, shiftCount: int) -> str: # 16
     int1 = int(inputValue,16)
+    length = len(inputValue)*4
+    bin_int1 = bin(int1)[2:]
+  
+    bin_int =bin_int1.zfill(length)
     
-    return
+    bin_list = np.array(list(bin_int))
+    bin_shifted = np.roll(bin_list,-shiftCount)
+
+    bins = ''.join(bin_shifted)
+    print(bins)
+    x = int(bins,2)
+
+    return f'{x:04X}'
 
 
 # ----------------------------------------------------------------------------------------------
