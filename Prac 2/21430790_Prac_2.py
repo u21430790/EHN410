@@ -29,8 +29,8 @@ Changelog:
 
 def test_DES():
     #print(des_XOR('1A3F', 'B7C2'))
-    print(des_left_Shift('1A3F', 4))
-
+    #print(des_left_Shift('1A3F', 4))
+    print(des_Split_In_Two("E4600FA647F7C412"))
 # ----------------------------------------------------------------------------------------------
 # 3.1 AES Cipher
 # ----------------------------------------------------------------------------------------------
@@ -212,16 +212,21 @@ def des_Apply_Permutation(valueToPermute: str, permuteTable: np.ndarray, numBits
 
 
 def des_Split_In_Two(inputValue: str) -> np.ndarray: # 14
-    return
+    length = len(inputValue)
+    x1 = inputValue[0:length//2]
+    x2 = inputValue[length//2:]
+
+    return np.array([x1,x2])
 
 
 def des_XOR(value1: str, value2: str) -> str: # 15
+    length = max([len(value1),len(value2)])
     int1 = int(value1,16)
     int2 = int(value2,16)
 
     xored  = int1^int2
 
-    return f'{xored:04X}'
+    return f'{xored:0{length}X}'
 
 
 def des_left_Shift(inputValue: str, shiftCount: int) -> str: # 16
@@ -235,7 +240,7 @@ def des_left_Shift(inputValue: str, shiftCount: int) -> str: # 16
     bin_shifted = np.roll(bin_list,-shiftCount)
 
     bins = ''.join(bin_shifted)
-    print(bins)
+    #print(bins)
     x = int(bins,2)
 
     return f'{x:04X}'
