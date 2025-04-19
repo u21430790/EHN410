@@ -1,6 +1,8 @@
 import numpy as np
 import string
-
+from PIL import Image
+import numpy as np
+import matplotlib.pyplot as plt
 
 # ----------------------------------------------------------------------------------------------
 # ----------------------------------------------------------------------------------------------
@@ -33,13 +35,31 @@ def test_DES():
     print(des_Split_In_Two("E4600FA647F7C412"))
 
 def test_RC4():
+    """
     key = "MyS3cr3tK3y#2025"
-    #print(rc4_Init_S_T(key))
     plaintext = "I am the one who meows"
     cipher = rc4_Encrypt_String(plaintext,key)
     print(cipher)
     decrypted = rc4_Decrypt_String(cipher,key)
     print(decrypted)
+    """
+
+
+    # Load image
+    img = Image.open('jerry.png')
+    img_np = np.array(img)
+    image_dim = img_np.shape
+    # Encrypt
+    key = "ToonMouse2025"
+    encrypted_img_np = rc4_Encrypt_Image(img_np, key)
+    encrypted_img_np = encrypted_img_np.reshape(image_dim)
+    Image.fromarray(encrypted_img_np).save('encrypted_jerry.png')
+
+    # Decrypt
+    decrypted_img_np = rc4_Decrypt_Image(encrypted_img_np, key)
+    decrypted_img_np = decrypted_img_np.reshape(image_dim)
+    Image.fromarray(decrypted_img_np).save('decrypted_jerry.png')
+
 # ----------------------------------------------------------------------------------------------
 # 3.1 AES Cipher
 # ----------------------------------------------------------------------------------------------
@@ -327,12 +347,29 @@ def rc4_Decrypt_String(ciphertext: np.ndarray, key: str) -> str: # 6
     return plaintext
 
 
-def rc4_Encrypt_Image(plaintext: np.ndarray, key: str) -> np.ndarray: # 7
-    return
+def rc4_Encrypt_Image(plaintext: np.ndarray, key: str) -> np.ndarray:
+    # Flatten image to 1D byte array for stream cipher
+    flat = plaintext.flatten()
+    
+    # RC4 setup
+    S_T = rc4_Init_S_T(key)
+    S = S_T[0]
+    T = S_T[1]
+    permuted_S = rc4_Init_Permute_S(S, T)
+    
+    ciphertext = np.zeros_like(flat, dtype=np.uint8)
+    i = j = 0
+    for idx in range(len(flat)):
+        i, j, permuted_S, k = rc4_Generate_Stream_Iteration(i, j, permuted_S)
+        ciphertext[idx] = rc4_Process_Byte(flat[idx], k)
+    
+    return ciphertext
 
 
-def rc4_Decrypt_Image(ciphertext: np.ndarray, key: str) -> np.ndarray: # 8
-    return
+def rc4_Decrypt_Image(ciphertext: np.ndarray, key: str) -> np.ndarray:
+    # RC4 decryption is identical to encryption
+    return rc4_Encrypt_Image(ciphertext, key)
+
 
 
 # ----------------------------------------------------------------------------------------------
