@@ -155,7 +155,14 @@ def aes_des_rc4_Convert_To_Image(arrayToConvert: np.ndarray, originalShape: tupl
 # ----------------------------------------------------------------------------------------------
 
 def des_Generate_Round_Keys(key: str, permutedChoice1, permutedChoice2, roundShifts) -> np.ndarray: # 1
-    return
+    keys = []
+
+    #permed1 = des_Apply_Permutation(key,perm1,16)
+    
+    for shifts in roundShifts:
+        shifted = des_left_Shift(permutedChoice1,shifts)
+        keys.append(shifted)
+    return np.array(keys)
 
 
 def des_Preprocess_String_Plaintext(plaintext: str) -> np.ndarray: # 2
@@ -348,7 +355,7 @@ def rc4_Decrypt_String(ciphertext: np.ndarray, key: str) -> str: # 6
 
 
 def rc4_Encrypt_Image(plaintext: np.ndarray, key: str) -> np.ndarray:
-    # Flatten image to 1D byte array for stream cipher
+
     flat = plaintext.flatten()
     
     # RC4 setup
@@ -367,7 +374,6 @@ def rc4_Encrypt_Image(plaintext: np.ndarray, key: str) -> np.ndarray:
 
 
 def rc4_Decrypt_Image(ciphertext: np.ndarray, key: str) -> np.ndarray:
-    # RC4 decryption is identical to encryption
     return rc4_Encrypt_Image(ciphertext, key)
 
 
