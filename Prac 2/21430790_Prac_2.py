@@ -276,10 +276,18 @@ def rc4_Init_Permute_S(sArray: np.ndarray, tArray: np.ndarray) -> np.ndarray: # 
 
 
 def rc4_Generate_Stream_Iteration(i: int, j: int, sArray: np.ndarray) -> tuple: # 3
-    return
+
+    i = (i+1) % 256
+    j = (j+sArray[i]) % 256
+    sArray[i], sArray[j] = sArray[j], sArray[i]
+    t = (sArray[i] + sArray[j]) % 256
+    k_stream = sArray[t]
+
+    return (i,j,sArray,k_stream)
 
 
 def rc4_Process_Byte(byteToProcess: int, k: int) -> int: # 4
+    
     return
 
 
