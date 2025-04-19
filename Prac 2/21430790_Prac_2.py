@@ -31,6 +31,10 @@ def test_DES():
     #print(des_XOR('1A3F', 'B7C2'))
     #print(des_left_Shift('1A3F', 4))
     print(des_Split_In_Two("E4600FA647F7C412"))
+
+def test_RC4():
+    key = "MyS3cr3tK3y#2025"
+    print(rc4_Init_S_T(key))
 # ----------------------------------------------------------------------------------------------
 # 3.1 AES Cipher
 # ----------------------------------------------------------------------------------------------
@@ -251,11 +255,24 @@ def des_left_Shift(inputValue: str, shiftCount: int) -> str: # 16
 # ----------------------------------------------------------------------------------------------
 
 def rc4_Init_S_T(key: str) -> np.ndarray: # 1
-    return
+    S = []
+    T = []
+    K = key.encode('ascii')
+    print(K)
+    keylen = len(key)
+    for i in range(256):
+        S.append(i)
+        T.append(K[i % keylen ])
+
+    return np.array([S,T])
 
 
 def rc4_Init_Permute_S(sArray: np.ndarray, tArray: np.ndarray) -> np.ndarray: # 2
-    return
+    j = 0
+    for i in range(256):
+        j = (j+ sArray[i] + tArray[i] ) % 256
+        sArray[i],sArray[j]  = sArray[j], sArray[i]
+    return sArray
 
 
 def rc4_Generate_Stream_Iteration(i: int, j: int, sArray: np.ndarray) -> tuple: # 3
@@ -285,4 +302,5 @@ def rc4_Decrypt_Image(ciphertext: np.ndarray, key: str) -> np.ndarray: # 8
 # ----------------------------------------------------------------------------------------------
 # ----------------------------------------------------------------------------------------------
 
-test_DES()
+#test_DES()
+test_RC4()
