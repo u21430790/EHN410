@@ -34,7 +34,12 @@ def test_DES():
 
 def test_RC4():
     key = "MyS3cr3tK3y#2025"
-    print(rc4_Init_S_T(key))
+    #print(rc4_Init_S_T(key))
+    plaintext = "I am the one who meows"
+    cipher = rc4_Encrypt_String(plaintext,key)
+    print(cipher)
+    decrypted = rc4_Decrypt_String(cipher,key)
+    print(decrypted)
 # ----------------------------------------------------------------------------------------------
 # 3.1 AES Cipher
 # ----------------------------------------------------------------------------------------------
@@ -258,7 +263,6 @@ def rc4_Init_S_T(key: str) -> np.ndarray: # 1
     S = []
     T = []
     K = key.encode('ascii')
-    print(K)
     keylen = len(key)
     for i in range(256):
         S.append(i)
@@ -287,16 +291,40 @@ def rc4_Generate_Stream_Iteration(i: int, j: int, sArray: np.ndarray) -> tuple: 
 
 
 def rc4_Process_Byte(byteToProcess: int, k: int) -> int: # 4
-    
-    return
+
+    return byteToProcess^k
 
 
 def rc4_Encrypt_String(plaintext: str, key: str) -> np.ndarray: # 5
-    return
+    S_T = rc4_Init_S_T(key)
+    S = S_T[0]
+    T = S_T[1]
+    permuted_S = rc4_Init_Permute_S(S,T)
+    cipher = []
+    i = 0
+    j = 0
+    for char in plaintext.encode('ascii'):
+        i,j,permuted_S, k = rc4_Generate_Stream_Iteration(i,j,permuted_S)
+        cipher.append(rc4_Process_Byte(char,k))
+
+    return cipher
 
 
 def rc4_Decrypt_String(ciphertext: np.ndarray, key: str) -> str: # 6
-    return
+    S_T = rc4_Init_S_T(key)
+    S = S_T[0]
+    T = S_T[1]
+    permuted_S = rc4_Init_Permute_S(S,T)
+    plaintext = ""
+    i = 0
+    j = 0
+    for byte in ciphertext:
+        i,j,permuted_S, k = rc4_Generate_Stream_Iteration(i,j,permuted_S)
+        plain_int = rc4_Process_Byte(byte,k)
+
+        plaintext += chr(plain_int)     
+    
+    return plaintext
 
 
 def rc4_Encrypt_Image(plaintext: np.ndarray, key: str) -> np.ndarray: # 7
