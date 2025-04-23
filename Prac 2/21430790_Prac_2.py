@@ -7,7 +7,10 @@ import matplotlib.pyplot as plt
 # ----------------------------------------------------------------------------------------------
 # ----------------------------------------------------------------------------------------------
 
-
+#print(ord('a')-36)
+a = 2 
+#print(a.encode('ascii').hex())
+#print(f'{a:02X}')
 '''
 IMPORTANT!!
 - Code submission due on Tuesday 29 April 2025, before 8h30, on AMS and ClickUP
@@ -32,8 +35,9 @@ Changelog:
 def test_DES():
     #print(des_XOR('1A3F', 'B7C2'))
     #print(des_left_Shift('1A3F', 4))
-    print(des_Split_In_Two("E4600FA647F7C412"))
-
+    #print(des_Split_In_Two("E4600FA647F7C412"))
+    plaintext = "abcdefgh"
+    key = "12345678"
 def test_RC4():
     """
     key = "MyS3cr3tK3y#2025"
@@ -166,7 +170,19 @@ def des_Generate_Round_Keys(key: str, permutedChoice1, permutedChoice2, roundShi
 
 
 def des_Preprocess_String_Plaintext(plaintext: str) -> np.ndarray: # 2
-    return
+    plain_hex = np.array([])
+    #print(a.encode('ascii').hex())
+    #print(f'{a:02X}')
+    for char in plaintext:
+        plain_hex.append(char.encode('ascii').hex())
+    if len(plain_hex)%8 != 0:
+        pad_len = len(plain_hex)%8
+        for i in range(pad_len):
+            plain_hex.append(f'{pad_len:02x}')
+    else: 
+        for i in range(8):
+            plain_hex.append('02')
+    return plain_hex
 
 
 def des_Create_Input_Blocks(processedArray: np.ndarray) -> np.ndarray: # 3
@@ -191,7 +207,7 @@ def des_Encrypt_String(plaintext: str, key: str) -> np.ndarray: # 5
 
 def des_Decrypt_String(ciphertext: np.ndarray, key: str) -> str: # 6
     keyPermChoice1 = np.load("DES_Arrays\\DES_Key_Permutation_Choice_1.npy")
-    k0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000eyPermChoice2 = np.load("DES_Arrays\\DES_Key_Permutation_Choice_2.npy")
+    keyPermChoice2 = np.load("DES_Arrays\\DES_Key_Permutation_Choice_2.npy")
     keyRoundShifts = np.load("DES_Arrays\\DES_Round_Shifts.npy")
     sBoxes = np.load("DES_Arrays\\DES_sBoxes.npy")
     FexpansionBox = np.load("DES_Arrays\\DES_Expansion_Box.npy")
@@ -244,7 +260,17 @@ def des_Decrypt_Image(ciphertext: np.ndarray, key: str) -> np.ndarray: # 12
 
 
 def des_Apply_Permutation(valueToPermute: str, permuteTable: np.ndarray, numBitsBeforePermute: int) -> str: # 13
-    return
+
+    values_bin = list(bin(int(valueToPermute,16)))
+    values_bin = values_bin[2:]
+    values_bin = values_bin.zfill(numBitsBeforePermute)
+    permed = np.empty(numBitsBeforePermute)
+    for i in range(len(values_bin)):
+        permed[permuteTable[i]] = values_bin[i]
+    permuted_str = ''.join(permed)
+    
+    return f'{permuted_str:0X}'
+
 
 
 def des_Split_In_Two(inputValue: str) -> np.ndarray: # 14
@@ -381,5 +407,5 @@ def rc4_Decrypt_Image(ciphertext: np.ndarray, key: str) -> np.ndarray:
 # ----------------------------------------------------------------------------------------------
 # ----------------------------------------------------------------------------------------------
 
-#test_DES()
-test_RC4()
+test_DES()
+#test_RC4()
