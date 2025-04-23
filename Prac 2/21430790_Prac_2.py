@@ -40,11 +40,18 @@ def test_DES():
     plaintext = "abcdefgh"
     key = "12345678"
 
-    x = des_Preprocess_String_Plaintext(plaintext)
+    #x = des_Preprocess_String_Plaintext(plaintext)
+    #print(x)
+    #y = des_Create_Input_Blocks(x)
+    #print(y)
+    #print(des_Remove_String_Padding(x))
+    keyPermChoice1 = np.load("DES_Arrays\\DES_Key_Permutation_Choice_1.npy")
+    keyPermChoice2 = np.load("DES_Arrays\\DES_Key_Permutation_Choice_2.npy")
+    keyRoundShifts = np.load("DES_Arrays\\DES_Round_Shifts.npy")
+    print(keyPermChoice1)
+    print(len(keyPermChoice1))
+    x = des_Generate_Round_Keys(key,keyPermChoice1,keyPermChoice2,keyRoundShifts)
     print(x)
-    y = des_Create_Input_Blocks(x)
-    print(y)
-    print(des_Remove_String_Padding(x))
 
 def test_RC4():
     """
@@ -168,12 +175,19 @@ def aes_des_rc4_Convert_To_Image(arrayToConvert: np.ndarray, originalShape: tupl
 
 def des_Generate_Round_Keys(key: str, permutedChoice1, permutedChoice2, roundShifts) -> np.ndarray: # 1
     keys = []
-
-    #permed1 = des_Apply_Permutation(key,perm1,16)
-    
+    key_list = []
+    key_str = ""
+    for k in key:
+        k_hex = k.encode('ascii').hex()
+        key_list.append(k_hex)
+        key_str+= k_hex
+    print(f'key_str: {key_str}')
+    permed1 = des_Apply_Permutation(key_str,permutedChoice1,64)
+    print(f'permed1:{permed1}')
     for shifts in roundShifts:
-        shifted = des_left_Shift(permutedChoice1,shifts)
-        keys.append(shifted)
+        shifted = des_left_Shift(permed1,shifts)
+        print(f'shifted: {shifted}')
+        keys.append(des_Apply_Permutation(shifted,permutedChoice2,64))
     return np.array(keys)
 
 
@@ -277,16 +291,24 @@ def des_Decrypt_Image(ciphertext: np.ndarray, key: str) -> np.ndarray: # 12
 
 def des_Apply_Permutation(valueToPermute: str, permuteTable: np.ndarray, numBitsBeforePermute: int) -> str: # 13
 
-    values_bin = list(bin(int(valueToPermute,16)))
+    values_bin = bin(int(valueToPermute,16))
     values_bin = values_bin[2:]
     values_bin = values_bin.zfill(numBitsBeforePermute)
-    permed = np.empty(numBitsBeforePermute)
-    for i in range(len(values_bin)):
-        permed[permuteTable[i]] = values_bin[i]
-    permuted_str = ''.join(permed)
-    
-    return f'{permuted_str:0X}'
+    values_bin_list = list(values_bin)
+    #permed = ['0']*numBitsBeforePermute
 
+    #for i in range(len(permuteTable)):
+    #    permed[permuteTable[i]] = values_bin_list[i]
+    #print(permed)
+    #permuted_str = ''.join(permed)
+    #permuted_str = int(permuted_str,2)
+    
+    permed = ""
+    for j in permuteTable:
+        permed+= values_bin_list[j]
+    #print(permed)
+    permuted_str = int(permed,2) 
+    return f'{permuted_str:0X}'
 
 
 def des_Split_In_Two(inputValue: str) -> np.ndarray: # 14
