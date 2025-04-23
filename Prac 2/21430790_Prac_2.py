@@ -7,10 +7,7 @@ import matplotlib.pyplot as plt
 # ----------------------------------------------------------------------------------------------
 # ----------------------------------------------------------------------------------------------
 
-#print(ord('a')-36)
-a = 2 
-#print(a.encode('ascii').hex())
-#print(f'{a:02X}')
+
 '''
 IMPORTANT!!
 - Code submission due on Tuesday 29 April 2025, before 8h30, on AMS and ClickUP
@@ -36,8 +33,19 @@ def test_DES():
     #print(des_XOR('1A3F', 'B7C2'))
     #print(des_left_Shift('1A3F', 4))
     #print(des_Split_In_Two("E4600FA647F7C412"))
+    #print(ord('a')-36)
+    #a = 2 
+    #print(a.encode('ascii').hex())
+    #print(f'{a:02X}')
     plaintext = "abcdefgh"
     key = "12345678"
+
+    x = des_Preprocess_String_Plaintext(plaintext)
+    print(x)
+    y = des_Create_Input_Blocks(x)
+    print(y)
+    print(des_Remove_String_Padding(x))
+
 def test_RC4():
     """
     key = "MyS3cr3tK3y#2025"
@@ -170,27 +178,35 @@ def des_Generate_Round_Keys(key: str, permutedChoice1, permutedChoice2, roundShi
 
 
 def des_Preprocess_String_Plaintext(plaintext: str) -> np.ndarray: # 2
-    plain_hex = np.array([])
-    #print(a.encode('ascii').hex())
-    #print(f'{a:02X}')
+    plain_hex = []
+
     for char in plaintext:
         plain_hex.append(char.encode('ascii').hex())
     if len(plain_hex)%8 != 0:
-        pad_len = len(plain_hex)%8
+        pad_len = 8-len(plain_hex)%8
         for i in range(pad_len):
             plain_hex.append(f'{pad_len:02x}')
     else: 
         for i in range(8):
-            plain_hex.append('02')
-    return plain_hex
+            plain_hex.append('08')
+    return np.array(plain_hex)
 
 
 def des_Create_Input_Blocks(processedArray: np.ndarray) -> np.ndarray: # 3
-    return
+    blocks = []
+    for i in range(0,len(processedArray),8):
+        block = processedArray[i:i+8]
+        block_str = ''.join(block)
+        blocks.append(block_str)
+    return np.array(blocks)
 
 
 def des_Remove_String_Padding(paddedArray: np.ndarray) -> np.ndarray: # 4
-    return
+    
+    padding = paddedArray[-1]
+    pad_len = int(padding,16)
+
+    return paddedArray[:-pad_len] 
 
 
 def des_Encrypt_String(plaintext: str, key: str) -> np.ndarray: # 5
