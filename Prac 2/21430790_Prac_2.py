@@ -29,29 +29,110 @@ Changelog:
  
 '''
 
+def display_des_arrays(directory="DES_Arrays"):
+    """
+    Load and display all DES arrays in a neat, formatted way.
+    
+    Parameters:
+        directory (str): The directory containing the DES array files
+    """
+    import numpy as np
+    import os
+    from tabulate import tabulate
+    
+    # Define the arrays to load
+    des_arrays = {
+        "Key Permutation Choice 1": "DES_Key_Permutation_Choice_1.npy",
+        "Key Permutation Choice 2": "DES_Key_Permutation_Choice_2.npy",
+        "Round Shifts": "DES_Round_Shifts.npy",
+        "S-Boxes": "DES_sBoxes.npy",
+        "Expansion Box": "DES_Expansion_Box.npy",
+        "F-Function Permutation": "DES_F_Function_Permutation.npy",
+        "Initial Permutation": "DES_Initial_Permutation.npy",
+        "Inverse Initial Permutation": "DES_Inverse_Initial_Permutation.npy"
+    }
+    
+    loaded_arrays = {}
+    
+    # Load all arrays
+    for name, filename in des_arrays.items():
+        filepath = os.path.join(directory, filename)
+        try:
+            loaded_arrays[name] = np.load(filepath)
+            print(f"Successfully loaded: {name}")
+        except FileNotFoundError:
+            print(f"Warning: Could not find {filepath}")
+    
+    # Display arrays in a formatted way
+    for name, array in loaded_arrays.items():
+        print("\n" + "="*80)
+        print(f"Array: {name}")
+        print("="*80)
+        
+        # Special handling for S-Boxes (3D array)
+        if name == "S-Boxes":
+            for i, s_box in enumerate(array):
+                print(f"\nS-Box {i+1}:")
+                print(tabulate(s_box, tablefmt="grid"))
+        else:
+            # Format based on dimensionality
+            if len(array.shape) == 1:
+                # For 1D arrays, display in chunks of 8
+                rows = []
+                for i in range(0, len(array), 8):
+                    chunk = array[i:i+8]
+                    rows.append([f"{j+1}" for j in range(i, i+len(chunk))])
+                    rows.append([f"{val}" for val in chunk])
+                    rows.append([""] * len(chunk))  # Empty row for separation
+                
+                # Remove the last empty row
+                if rows:
+                    rows.pop()
+                    
+                print(tabulate(rows, tablefmt="grid"))
+            else:
+                # For 2D arrays
+                print(tabulate(array, tablefmt="grid"))
+        
+        print(f"\nShape: {array.shape}")
+
 def test_DES():
-    #print(des_XOR('1A3F', 'B7C2'))
-    #print(des_left_Shift('1A3F', 4))
-    #print(des_Split_In_Two("E4600FA647F7C412"))
-    #print(ord('a')-36)
-    #a = 2 
-    #print(a.encode('ascii').hex())
-    #print(f'{a:02X}')
     plaintext = "abcdefgh"
     key = "12345678"
 
-    #x = des_Preprocess_String_Plaintext(plaintext)
-    #print(x)
-    #y = des_Create_Input_Blocks(x)
-    #print(y)
-    #print(des_Remove_String_Padding(x))
+
+
     keyPermChoice1 = np.load("DES_Arrays\\DES_Key_Permutation_Choice_1.npy")
     keyPermChoice2 = np.load("DES_Arrays\\DES_Key_Permutation_Choice_2.npy")
     keyRoundShifts = np.load("DES_Arrays\\DES_Round_Shifts.npy")
+    sBoxes = np.load("DES_Arrays\\DES_sBoxes.npy")
+    FexpansionBox = np.load("DES_Arrays\\DES_Expansion_Box.npy")
+    FpermutationChoice = np.load("DES_Arrays\\DES_F_Function_Permutation.npy")
+    initPerm = np.load("DES_Arrays\\DES_Initial_Permutation.npy")
+    invInitPerm = np.load("DES_Arrays\\DES_Inverse_Initial_Permutation.npy")
+    """
+    print("keyPermChoice1 #####################")
     print(keyPermChoice1)
-    print(len(keyPermChoice1))
-    x = des_Generate_Round_Keys(key,keyPermChoice1,keyPermChoice2,keyRoundShifts)
-    print(x)
+    print("keyPermChoice2 #####################")
+    print(keyPermChoice2)
+    print("keyRoundShifts #####################")
+    print(keyRoundShifts)
+    print("#############################################")
+
+    print("sBoxes #############################")
+    print(sBoxes)
+    print("FexpansionBox ######################")
+    print(FexpansionBox)
+    print("FpermutationChoice #################")
+    print(FpermutationChoice)
+    print("initPerm ###########################")
+    print(initPerm)
+    print("invInitPerm ########################")
+    print(invInitPerm)
+    """
+    #x = des_Generate_Round_Keys(key,keyPermChoice1,keyPermChoice2,keyRoundShifts)
+    #print(x)
+    print(des_Process_Round("FF00785500FF8066","502CAC572AC2",sBoxes,FexpansionBox,FpermutationChoice ))
 
 def test_RC4():
     """
@@ -173,21 +254,19 @@ def aes_des_rc4_Convert_To_Image(arrayToConvert: np.ndarray, originalShape: tupl
 # 3.2 DES Cipher
 # ----------------------------------------------------------------------------------------------
 
-def des_Generate_Round_Keys(key: str, permutedChoice1, permutedChoice2, roundShifts) -> np.ndarray: # 1
+def des_Generate_Round_Keys(key: str, permutedChoice1, permutedChoice2, roundShifts) -> np.ndarray:
+    key_str = key.encode('ascii').hex()
+    permed1 = des_Apply_Permutation(key_str, permutedChoice1, 64)
+    
     keys = []
-    key_list = []
-    key_str = ""
-    for k in key:
-        k_hex = k.encode('ascii').hex()
-        key_list.append(k_hex)
-        key_str+= k_hex
-    print(f'key_str: {key_str}')
-    permed1 = des_Apply_Permutation(key_str,permutedChoice1,64)
-    print(f'permed1:{permed1}')
+    total_shifts = 0
+    
     for shifts in roundShifts:
-        shifted = des_left_Shift(permed1,shifts)
-        print(f'shifted: {shifted}')
-        keys.append(des_Apply_Permutation(shifted,permutedChoice2,64))
+        total_shifts += shifts
+        shifted = des_left_Shift(permed1, total_shifts)
+        round_key = des_Apply_Permutation(shifted, permutedChoice2, 56)
+        keys.append(round_key)
+
     return np.array(keys)
 
 
@@ -249,12 +328,60 @@ def des_Decrypt_String(ciphertext: np.ndarray, key: str) -> str: # 6
 
 def des_Process_Block(block: str, roundKeys: np.ndarray, initialPerm: np.ndarray, sBoxes: np.ndarray,
                       expansionBox: np.ndarray, FpermChoice: np.ndarray, invInitialPerm: np.ndarray) -> str: # 7
+    
     return
+
 
 
 def des_Process_Round(roundInputValue: str, roundKey: str, sBoxes: np.ndarray, expansionBox: np.ndarray, 
                       permutationChoice: np.ndarray) -> str: # 8
-    return
+    
+    split = des_Split_In_Two(roundInputValue)
+    left = split[0]
+    right = split[1]
+    #print(f'right : {right}')
+    expanded = ""
+    right_bin = bin(int(right,16))[2:].zfill(32)
+    
+    for i in expansionBox:
+        expanded+= right_bin[i-1]
+    
+    expanded = f'{int(expanded,2):0X}'
+    #print(f'expanded : {expanded}')
+    xored_right = des_XOR(expanded,roundKey)
+
+    #print(f"xored : {xored_right}")
+
+    bin_xored_right = bin(int(xored_right,16))[2:]
+    bin_xored_right = bin_xored_right.zfill(48)
+    sbox_permuted = ""
+    #print(len(bin_xored_right))
+    box_int = 0    
+    for i in range(0,48,6):
+
+        block = bin_xored_right[i:i+6]
+        row_bits = block[0] + block[5] 
+        col_bits = block[1]+block[2]+block[3]+block[4]
+        row = int(row_bits,2)
+        col = int(col_bits,2)
+        #print(f"iteration : {box_int}###################################################")
+        #print(f"block : {block}")
+        #print(f"sbox used: {sBoxes[box_int][row][col]}")
+        
+        sbox_bin = bin(sBoxes[box_int][row][col])[2:].zfill(4)
+
+        box_int+=1
+        sbox_permuted+= sbox_bin
+
+    #print(f"sbox permuted: {sbox_permuted}")
+    sbox_hex = f'{int(sbox_permuted,2):0X}' 
+    fpermed = des_Apply_Permutation(sbox_hex,permutationChoice,32)
+    #print(f"fpermuted: {fpermed}")
+    new_right = des_XOR(left,fpermed)
+    new_left = right
+
+    return new_left+new_right
+    
 
 
 def des_Preprocess_Image_Plaintext(plaintext: np.ndarray) -> np.ndarray: # 9
@@ -290,25 +417,10 @@ def des_Decrypt_Image(ciphertext: np.ndarray, key: str) -> np.ndarray: # 12
 
 
 def des_Apply_Permutation(valueToPermute: str, permuteTable: np.ndarray, numBitsBeforePermute: int) -> str: # 13
-
-    values_bin = bin(int(valueToPermute,16))
-    values_bin = values_bin[2:]
-    values_bin = values_bin.zfill(numBitsBeforePermute)
-    values_bin_list = list(values_bin)
-    #permed = ['0']*numBitsBeforePermute
-
-    #for i in range(len(permuteTable)):
-    #    permed[permuteTable[i]] = values_bin_list[i]
-    #print(permed)
-    #permuted_str = ''.join(permed)
-    #permuted_str = int(permuted_str,2)
     
-    permed = ""
-    for j in permuteTable:
-        permed+= values_bin_list[j]
-    #print(permed)
-    permuted_str = int(permed,2) 
-    return f'{permuted_str:0X}'
+    bin_str = bin(int(valueToPermute, 16))[2:].zfill(numBitsBeforePermute)
+    permuted = ''.join(bin_str[i - 1] for i in permuteTable.flatten()) 
+    return f'{int(permuted,2):0X}'
 
 
 def des_Split_In_Two(inputValue: str) -> np.ndarray: # 14
@@ -343,7 +455,7 @@ def des_left_Shift(inputValue: str, shiftCount: int) -> str: # 16
     #print(bins)
     x = int(bins,2)
 
-    return f'{x:04X}'
+    return f'{x:0X}'
 
 
 # ----------------------------------------------------------------------------------------------
