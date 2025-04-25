@@ -29,72 +29,6 @@ Changelog:
  
 '''
 
-def display_des_arrays(directory="DES_Arrays"):
-    """
-    Load and display all DES arrays in a neat, formatted way.
-    
-    Parameters:
-        directory (str): The directory containing the DES array files
-    """
-    import numpy as np
-    import os
-    from tabulate import tabulate
-    
-    # Define the arrays to load
-    des_arrays = {
-        "Key Permutation Choice 1": "DES_Key_Permutation_Choice_1.npy",
-        "Key Permutation Choice 2": "DES_Key_Permutation_Choice_2.npy",
-        "Round Shifts": "DES_Round_Shifts.npy",
-        "S-Boxes": "DES_sBoxes.npy",
-        "Expansion Box": "DES_Expansion_Box.npy",
-        "F-Function Permutation": "DES_F_Function_Permutation.npy",
-        "Initial Permutation": "DES_Initial_Permutation.npy",
-        "Inverse Initial Permutation": "DES_Inverse_Initial_Permutation.npy"
-    }
-    
-    loaded_arrays = {}
-    
-    # Load all arrays
-    for name, filename in des_arrays.items():
-        filepath = os.path.join(directory, filename)
-        try:
-            loaded_arrays[name] = np.load(filepath)
-            print(f"Successfully loaded: {name}")
-        except FileNotFoundError:
-            print(f"Warning: Could not find {filepath}")
-    
-    # Display arrays in a formatted way
-    for name, array in loaded_arrays.items():
-        print("\n" + "="*80)
-        print(f"Array: {name}")
-        print("="*80)
-        
-        # Special handling for S-Boxes (3D array)
-        if name == "S-Boxes":
-            for i, s_box in enumerate(array):
-                print(f"\nS-Box {i+1}:")
-                print(tabulate(s_box, tablefmt="grid"))
-        else:
-            # Format based on dimensionality
-            if len(array.shape) == 1:
-                # For 1D arrays, display in chunks of 8
-                rows = []
-                for i in range(0, len(array), 8):
-                    chunk = array[i:i+8]
-                    rows.append([f"{j+1}" for j in range(i, i+len(chunk))])
-                    rows.append([f"{val}" for val in chunk])
-                    rows.append([""] * len(chunk))  # Empty row for separation
-                
-                # Remove the last empty row
-                if rows:
-                    rows.pop()
-                    
-                print(tabulate(rows, tablefmt="grid"))
-            else:
-                # For 2D arrays
-                print(tabulate(array, tablefmt="grid"))
-        
-        print(f"\nShape: {array.shape}")
 
 def test_DES():
     plaintext = "abcdefgh"
@@ -110,6 +44,11 @@ def test_DES():
     FpermutationChoice = np.load("DES_Arrays\\DES_F_Function_Permutation.npy")
     initPerm = np.load("DES_Arrays\\DES_Initial_Permutation.npy")
     invInitPerm = np.load("DES_Arrays\\DES_Inverse_Initial_Permutation.npy")
+
+    ciphertext = des_Encrypt_String(plaintext,key)
+    print(ciphertext)
+    decrypted = des_Decrypt_String(ciphertext,key)
+    print(decrypted)
     """
     print("keyPermChoice1 #####################")
     print(keyPermChoice1)
@@ -130,8 +69,9 @@ def test_DES():
     print("invInitPerm ########################")
     print(invInitPerm)
     """
-    x = des_Generate_Round_Keys(key,keyPermChoice1,keyPermChoice2,keyRoundShifts)
-    print(x)
+    #x = des_Generate_Round_Keys(key,keyPermChoice1,keyPermChoice2,keyRoundShifts)
+    #print(x)
+    
     #print(des_Process_Round("FF00785500FF8066","502CAC572AC2",sBoxes,FexpansionBox,FpermutationChoice ))
 
 def test_RC4():
@@ -275,13 +215,16 @@ def des_Preprocess_String_Plaintext(plaintext: str) -> np.ndarray: # 2
 
     for char in plaintext:
         plain_hex.append(char.encode('ascii').hex())
+   
     if len(plain_hex)%8 != 0:
         pad_len = 8-len(plain_hex)%8
         for i in range(pad_len):
             plain_hex.append(f'{pad_len:02x}')
+    
     else: 
         for i in range(8):
             plain_hex.append('08')
+    #print(f"PROCESSED FOOD YUM {plain_hex}")
     return np.array(plain_hex)
 
 
@@ -311,10 +254,24 @@ def des_Encrypt_String(plaintext: str, key: str) -> np.ndarray: # 5
     FpermutationChoice = np.load("DES_Arrays\\DES_F_Function_Permutation.npy")
     initPerm = np.load("DES_Arrays\\DES_Initial_Permutation.npy")
     invInitPerm = np.load("DES_Arrays\\DES_Inverse_Initial_Permutation.npy")
-    return
+
+    text = des_Preprocess_String_Plaintext(plaintext)
+    print(f'original plaintext: {text}')
+    keys = des_Generate_Round_Keys(key,keyPermChoice1,keyPermChoice2,keyRoundShifts)
+    blocks = des_Create_Input_Blocks(text)
+
+    ciphertext = []
+    for b in blocks:
+        cipher = des_Process_Block(b,keys,initPerm,sBoxes,FexpansionBox,FpermutationChoice,invInitPerm)
+        for i in range(0,len(cipher),2):
+            c = cipher[i:i+2]
+            ciphertext.append(c)
+
+    return np.array(ciphertext)
 
 
-def des_Decrypt_String(ciphertext: np.ndarray, key: str) -> str: # 6
+def des_Decrypt_String(ciphertext: np.ndarray, key: str) -> str:
+    # Load required tables
     keyPermChoice1 = np.load("DES_Arrays\\DES_Key_Permutation_Choice_1.npy")
     keyPermChoice2 = np.load("DES_Arrays\\DES_Key_Permutation_Choice_2.npy")
     keyRoundShifts = np.load("DES_Arrays\\DES_Round_Shifts.npy")
@@ -323,7 +280,42 @@ def des_Decrypt_String(ciphertext: np.ndarray, key: str) -> str: # 6
     FpermutationChoice = np.load("DES_Arrays\\DES_F_Function_Permutation.npy")
     initPerm = np.load("DES_Arrays\\DES_Initial_Permutation.npy")
     invInitPerm = np.load("DES_Arrays\\DES_Inverse_Initial_Permutation.npy")
-    return
+    
+    # Create blocks from ciphertext (each block should be 8 bytes = 16 hex chars)
+    cipher_blocks = []
+
+    #print(f'cipher len :{len(ciphertext)}')
+    for i in range(0, len(ciphertext), 8):
+        block = ''.join(ciphertext[i:i+8])
+        cipher_blocks.append(block)
+    print(f'cipherblocks: {cipher_blocks}')
+
+    keys = des_Generate_Round_Keys(key, keyPermChoice1, keyPermChoice2, keyRoundShifts)
+    inv_keys = keys[::-1]  # Reverse the keys for decryption
+    
+    plaintext = []
+    for b in cipher_blocks:
+        plain = des_Process_Block(b, inv_keys, initPerm, sBoxes, FexpansionBox, FpermutationChoice, invInitPerm)
+        for i in range(0, len(plain), 2):
+            p = plain[i:i+2]
+            plaintext.append(p)
+    
+    # Remove padding
+    #decrypted = des_Remove_String_Padding(np.array(plaintext))
+    decrypted = plaintext
+    print(f'decrypted_plaintext: {decrypted}')
+ 
+    final_decrypted = ""
+    for d in decrypted:
+        try:
+            dec_char = bytes.fromhex(d).decode('ascii')
+            final_decrypted += dec_char
+        except:
+
+            dec_char = chr(int(d, 16))
+            final_decrypted += dec_char
+    
+    return final_decrypted
 
 
 def des_Process_Block(block: str, roundKeys: np.ndarray, initialPerm: np.ndarray, sBoxes: np.ndarray,
