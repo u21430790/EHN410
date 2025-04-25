@@ -31,7 +31,7 @@ Changelog:
 
 
 def test_DES():
-    plaintext = "abcdefgh"
+    plaintext = "xfcelmen"
     key = "12345678"
 
 
@@ -217,11 +217,12 @@ def des_Preprocess_String_Plaintext(plaintext: str) -> np.ndarray: # 2
         plain_hex.append(char.encode('ascii').hex())
    
     if len(plain_hex)%8 != 0:
-        pad_len = 8-len(plain_hex)%8
+        pad_len = 8-(len(plain_hex)%8)
         for i in range(pad_len):
-            plain_hex.append(f'{pad_len:02x}')
+            plain_hex.append(f'{pad_len:02X}')
+            
     
-    else: 
+    elif  len(plain_hex)%8 == 0: 
         for i in range(8):
             plain_hex.append('08')
     #print(f"PROCESSED FOOD YUM {plain_hex}")
@@ -230,6 +231,7 @@ def des_Preprocess_String_Plaintext(plaintext: str) -> np.ndarray: # 2
 
 def des_Create_Input_Blocks(processedArray: np.ndarray) -> np.ndarray: # 3
     blocks = []
+    print(f'LENGTH DURING BLOCK CREATION : {len(processedArray)}')
     for i in range(0,len(processedArray),8):
         block = processedArray[i:i+8]
         block_str = ''.join(block)
@@ -262,7 +264,9 @@ def des_Encrypt_String(plaintext: str, key: str) -> np.ndarray: # 5
 
     ciphertext = []
     for b in blocks:
+        print(f"ENCRYPT B: {b}")
         cipher = des_Process_Block(b,keys,initPerm,sBoxes,FexpansionBox,FpermutationChoice,invInitPerm)
+        print(f"CIPHER BLOCK ENCRYPTION: {cipher}")
         for i in range(0,len(cipher),2):
             c = cipher[i:i+2]
             ciphertext.append(c)
@@ -281,13 +285,9 @@ def des_Decrypt_String(ciphertext: np.ndarray, key: str) -> str:
     initPerm = np.load("DES_Arrays\\DES_Initial_Permutation.npy")
     invInitPerm = np.load("DES_Arrays\\DES_Inverse_Initial_Permutation.npy")
     
-    # Create blocks from ciphertext (each block should be 8 bytes = 16 hex chars)
-    cipher_blocks = []
 
-    #print(f'cipher len :{len(ciphertext)}')
-    for i in range(0, len(ciphertext), 8):
-        block = ''.join(ciphertext[i:i+8])
-        cipher_blocks.append(block)
+    cipher_blocks = []
+    cipher_blocks = des_Create_Input_Blocks(ciphertext)
     print(f'cipherblocks: {cipher_blocks}')
 
     keys = des_Generate_Round_Keys(key, keyPermChoice1, keyPermChoice2, keyRoundShifts)
@@ -295,7 +295,9 @@ def des_Decrypt_String(ciphertext: np.ndarray, key: str) -> str:
     
     plaintext = []
     for b in cipher_blocks:
+        #print(f'CIPHER BLOCK TO BE PROCESSED: {b}')
         plain = des_Process_Block(b, inv_keys, initPerm, sBoxes, FexpansionBox, FpermutationChoice, invInitPerm)
+        #print(f'PROCESSED CIPHERBLOCK: {plain}')
         for i in range(0, len(plain), 2):
             p = plain[i:i+2]
             plaintext.append(p)
@@ -341,7 +343,7 @@ def des_Process_Round(roundInputValue: str, roundKey: str, sBoxes: np.ndarray, e
     split = des_Split_In_Two(roundInputValue)
     left = split[0]
     right = split[1]
-    #print(f'right : {right}')
+    
     expanded = ""
     right_bin = bin(int(right,16))[2:].zfill(32)
     
