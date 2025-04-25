@@ -130,9 +130,9 @@ def test_DES():
     print("invInitPerm ########################")
     print(invInitPerm)
     """
-    #x = des_Generate_Round_Keys(key,keyPermChoice1,keyPermChoice2,keyRoundShifts)
-    #print(x)
-    print(des_Process_Round("FF00785500FF8066","502CAC572AC2",sBoxes,FexpansionBox,FpermutationChoice ))
+    x = des_Generate_Round_Keys(key,keyPermChoice1,keyPermChoice2,keyRoundShifts)
+    print(x)
+    #print(des_Process_Round("FF00785500FF8066","502CAC572AC2",sBoxes,FexpansionBox,FpermutationChoice ))
 
 def test_RC4():
     """
@@ -253,7 +253,7 @@ def aes_des_rc4_Convert_To_Image(arrayToConvert: np.ndarray, originalShape: tupl
 # ----------------------------------------------------------------------------------------------
 # 3.2 DES Cipher
 # ----------------------------------------------------------------------------------------------
-
+    
 def des_Generate_Round_Keys(key: str, permutedChoice1, permutedChoice2, roundShifts) -> np.ndarray:
     key_str = key.encode('ascii').hex()
     permed1 = des_Apply_Permutation(key_str, permutedChoice1, 64)
@@ -268,7 +268,7 @@ def des_Generate_Round_Keys(key: str, permutedChoice1, permutedChoice2, roundShi
         keys.append(round_key)
 
     return np.array(keys)
-
+    
 
 def des_Preprocess_String_Plaintext(plaintext: str) -> np.ndarray: # 2
     plain_hex = []
@@ -328,8 +328,18 @@ def des_Decrypt_String(ciphertext: np.ndarray, key: str) -> str: # 6
 
 def des_Process_Block(block: str, roundKeys: np.ndarray, initialPerm: np.ndarray, sBoxes: np.ndarray,
                       expansionBox: np.ndarray, FpermChoice: np.ndarray, invInitialPerm: np.ndarray) -> str: # 7
+    initial = des_Apply_Permutation(block,initialPerm,64)
+
+    for key in roundKeys:
+        initial  = des_Process_Round(initial,key,sBoxes,expansionBox,FpermChoice)
     
-    return
+    split = des_Split_In_Two(initial)
+    left = split[0]
+    right = split[1]
+    new_str = right+left
+    inv_perm = des_Apply_Permutation(new_str,invInitialPerm,64)
+
+    return inv_perm
 
 
 
@@ -347,15 +357,11 @@ def des_Process_Round(roundInputValue: str, roundKey: str, sBoxes: np.ndarray, e
         expanded+= right_bin[i-1]
     
     expanded = f'{int(expanded,2):0X}'
-    #print(f'expanded : {expanded}')
     xored_right = des_XOR(expanded,roundKey)
-
-    #print(f"xored : {xored_right}")
 
     bin_xored_right = bin(int(xored_right,16))[2:]
     bin_xored_right = bin_xored_right.zfill(48)
     sbox_permuted = ""
-    #print(len(bin_xored_right))
     box_int = 0    
     for i in range(0,48,6):
 
@@ -364,19 +370,15 @@ def des_Process_Round(roundInputValue: str, roundKey: str, sBoxes: np.ndarray, e
         col_bits = block[1]+block[2]+block[3]+block[4]
         row = int(row_bits,2)
         col = int(col_bits,2)
-        #print(f"iteration : {box_int}###################################################")
-        #print(f"block : {block}")
-        #print(f"sbox used: {sBoxes[box_int][row][col]}")
         
         sbox_bin = bin(sBoxes[box_int][row][col])[2:].zfill(4)
 
         box_int+=1
         sbox_permuted+= sbox_bin
 
-    #print(f"sbox permuted: {sbox_permuted}")
+
     sbox_hex = f'{int(sbox_permuted,2):0X}' 
     fpermed = des_Apply_Permutation(sbox_hex,permutationChoice,32)
-    #print(f"fpermuted: {fpermed}")
     new_right = des_XOR(left,fpermed)
     new_left = right
 
@@ -442,20 +444,22 @@ def des_XOR(value1: str, value2: str) -> str: # 15
 
 
 def des_left_Shift(inputValue: str, shiftCount: int) -> str: # 16
-    int1 = int(inputValue,16)
-    length = len(inputValue)*4
-    bin_int1 = bin(int1)[2:]
-  
-    bin_int =bin_int1.zfill(length)
+    int_value = int(inputValue, 16)
+    bin_value = bin(int_value)[2:].zfill(56)  # Assuming 56-bit input from PC-1
     
-    bin_list = np.array(list(bin_int))
-    bin_shifted = np.roll(bin_list,-shiftCount)
 
-    bins = ''.join(bin_shifted)
-    #print(bins)
-    x = int(bins,2)
-
-    return f'{x:0X}'
+    left_half = bin_value[:28]
+    right_half = bin_value[28:]
+    
+ 
+    left_shifted = left_half[shiftCount:] + left_half[:shiftCount]
+    right_shifted = right_half[shiftCount:] + right_half[:shiftCount]
+    
+    
+    combined = left_shifted + right_shifted
+    
+    result = int(combined, 2)
+    return f'{result:X}'
 
 
 # ----------------------------------------------------------------------------------------------
