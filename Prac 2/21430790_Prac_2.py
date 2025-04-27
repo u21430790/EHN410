@@ -31,7 +31,7 @@ Changelog:
 
 
 def test_DES():
-    plaintext = "xfcelmen"
+    plaintext = "eiaofrjiouajsiof1124ajksnd"
     key = "12345678"
 
 
@@ -108,8 +108,20 @@ def aes_Generate_Round_Keys(key: str, sBox: np.ndarray) -> np.ndarray: # 1
     return
 
 
-def aes_Preprocess_String_Plaintext(plaintext: str) -> np.ndarray: # 2
-    return
+def aes_Preprocess_String_Plaintext(plaintext: str) -> np.ndarray:
+
+    plain_bytes = []
+
+    for char in plaintext:
+        plain_bytes.append(char.encode('ascii').hex())
+    
+
+    pad_len = 16 - (len(plain_bytes) % 16)
+    
+
+    padded_bytes = plain_bytes + [pad_len] * pad_len
+    
+    return np.array(padded_bytes, dtype=int)
 
 
 def aes_Create_Input_States(inputBytes: np.ndarray) -> np.ndarray: # 3
