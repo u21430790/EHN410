@@ -120,16 +120,21 @@ def test_AES():
                         [0xE3,0xD5,0xA3,0xC5]
                         ]
 
-    s =aes_Mix_Columns_Encrypt(np.array(mix_column_state))
-    print_2d_array_hex(s)
-    e = aes_Mix_Columns_Decrypt(s)
-    print("XXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-    print_2d_array_hex(e)
+    #s =aes_Mix_Columns_Encrypt(np.array(mix_column_state))
+    #print_2d_array_hex(s)
+    #e = aes_Mix_Columns_Decrypt(s)
+    #print("XXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+    #print_2d_array_hex(e)
 
-    f = aes_Substitute_Bytes(e,sBox)
-    print("XXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+    #f = aes_Substitute_Bytes(e,sBox)
+    #print("XXXXXXXXXXXXXXXXXXXXXXXXXXXX")
     #print_2d_array_hex(f)
-    print(f)
+    #print(f)
+    #print("@@@@@@@@@@@@@@")
+    #shifted = aes_Shift_Rows_Encrypt(f)
+    #print(shifted)
+    #print("@@@@@@@@@@@@@@@@@@")
+    #print(aes_Shift_Rows_Decrypt(shifted))
     key = 'abcdefghijklmnopqrstuvwxyz123456'
     x = aes_Generate_Round_Keys(key,sBox)
 
@@ -139,7 +144,13 @@ def test_AES():
 
 def aes_Generate_Round_Keys(key: str, sBox: np.ndarray) -> np.ndarray: # 1
     key = [ord(k) for k in key]
-    print(key)
+    key_array = []
+    for i in range(0,len(key),4):
+        block = key[i:i+4]
+        key_array.append(block)
+    print(key_array)
+    
+    round_constants = []
     return
 
 
