@@ -120,11 +120,16 @@ def test_AES():
                         [0xE3,0xD5,0xA3,0xC5]
                         ]
 
-    s =aes_Mix_Columns_Encrypt(mix_column_state)
+    s =aes_Mix_Columns_Encrypt(np.array(mix_column_state))
     print_2d_array_hex(s)
     e = aes_Mix_Columns_Decrypt(s)
     print("XXXXXXXXXXXXXXXXXXXXXXXXXXXX")
     print_2d_array_hex(e)
+
+    f = aes_Substitute_Bytes(e,sBox)
+    print("XXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+    #print_2d_array_hex(f)
+    print(f)
     key = 'abcdefghijklmnopqrstuvwxyz123456'
     x = aes_Generate_Round_Keys(key,sBox)
 
@@ -192,35 +197,35 @@ def aes_Add_Round_key(state: np.ndarray, roundKey: np.ndarray) -> np.ndarray: # 
     return
 
 
-def aes_Substitute_Bytes(state: np.ndarray, sBox: np.ndarray) -> np.ndarray: # 11
-
-    return
+def aes_Substitute_Bytes(state: np.ndarray, sBox: np.ndarray) -> np.ndarray:
+    result = state.copy()
+    for i in range(4):
+        for j in range(4):
+            byte = state[i][j]
+            row = (byte >> 4) & 0x0F
+            col = byte & 0x0F
+            result_byte = sBox[row][col]
+            result_byte = result_byte[2:]
+            result_int = int(result_byte,16)
+            result[i][j] = result_int
+    return result
 
 
 def aes_Shift_Rows_Encrypt(state: np.ndarray) -> np.ndarray: # 12
-    return
+    state[1] = np.roll(state[1],-1)
+    state[2] = np.roll(state[2],-2)
+    state[3] = np.roll(state[3],-3)
+    return state
 
 
 def aes_Shift_Rows_Decrypt(state: np.ndarray) -> np.ndarray: # 13
-    return
+    state[1] = np.roll(state[1],1)
+    state[2] = np.roll(state[2],2)
+    state[3] = np.roll(state[3],3)    
+        
+    return state
 
-"""
-def aes_Mix_Columns_Encrypt(state: np.ndarray) -> np.ndarray: # 14
-    mix = [ [2,3,1,1],
-                         [1,2,3,1],
-                         [1,1,2,3],
-                         [3,1,1,2]
-                        ]
-    new_state = []
-    for i in range(4):
-        a = (mix[0][0]*state[0][i]) ^ (mix[0][1]*state[1][i])^(mix[0][2]*state[2][i])^(mix[0][3]*state[3][i]) 
-        b = (mix[1][0]*state[0][i]) ^ (mix[1][1]*state[1][i])^(mix[1][2]*state[2][i])^(mix[1][3]*state[3][i])
-        c = (mix[2][0]*state[0][i]) ^ (mix[2][1]*state[1][i])^(mix[2][2]*state[2][i])^(mix[2][3]*state[3][i])
-        d = (mix[3][0]*state[0][i]) ^ (mix[3][1]*state[1][i])^(mix[3][2]*state[2][i])^(mix[3][3]*state[3][i])
-        new_state.append([a,b,c,d])
-    
-    return np.array(new_state)
-"""
+
 def aes_Mix_Columns_Encrypt(state: np.ndarray) -> np.ndarray:
     
     def gf_mul(a, b):
