@@ -100,11 +100,41 @@ def test_RC4():
     decrypted_img_np = decrypted_img_np.reshape(image_dim)
     Image.fromarray(decrypted_img_np).save('decrypted_jerry.png')
 
+def print_2d_array_hex(array):
+    for row in array:
+        for val in row:
+            print(f"{val:0X}", end=" ")  # 4-digit hex, uppercase
+        print()
+
+
+def test_AES():
+    sBox = np.load("AES_Arrays\\AES_Sbox_lookup.npy")
+    invsBox = np.load("AES_Arrays\\AES_Inverse_Sbox_lookup.npy")
+    print("SBOX #############################################")
+    print(sBox)
+    print("INVSBOX ##########################################")
+    print(invsBox)
+    mix_column_state = [ [0x52,0xDC,0xA2,0xE3],
+                        [0xDB,0xCE,0xA2,0x43],
+                        [0xB4,0xAD,0xC4,0xC1],
+                        [0xE3,0xD5,0xA3,0xC5]
+                        ]
+
+    s =aes_Mix_Columns_Encrypt(mix_column_state)
+    print_2d_array_hex(s)
+    e = aes_Mix_Columns_Decrypt(s)
+    print("XXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+    print_2d_array_hex(e)
+    key = 'abcdefghijklmnopqrstuvwxyz123456'
+    x = aes_Generate_Round_Keys(key,sBox)
+
 # ----------------------------------------------------------------------------------------------
 # 3.1 AES Cipher
 # ----------------------------------------------------------------------------------------------
 
 def aes_Generate_Round_Keys(key: str, sBox: np.ndarray) -> np.ndarray: # 1
+    key = [ord(k) for k in key]
+    print(key)
     return
 
 
@@ -163,6 +193,7 @@ def aes_Add_Round_key(state: np.ndarray, roundKey: np.ndarray) -> np.ndarray: # 
 
 
 def aes_Substitute_Bytes(state: np.ndarray, sBox: np.ndarray) -> np.ndarray: # 11
+
     return
 
 
@@ -173,14 +204,79 @@ def aes_Shift_Rows_Encrypt(state: np.ndarray) -> np.ndarray: # 12
 def aes_Shift_Rows_Decrypt(state: np.ndarray) -> np.ndarray: # 13
     return
 
-
+"""
 def aes_Mix_Columns_Encrypt(state: np.ndarray) -> np.ndarray: # 14
-    return
+    mix = [ [2,3,1,1],
+                         [1,2,3,1],
+                         [1,1,2,3],
+                         [3,1,1,2]
+                        ]
+    new_state = []
+    for i in range(4):
+        a = (mix[0][0]*state[0][i]) ^ (mix[0][1]*state[1][i])^(mix[0][2]*state[2][i])^(mix[0][3]*state[3][i]) 
+        b = (mix[1][0]*state[0][i]) ^ (mix[1][1]*state[1][i])^(mix[1][2]*state[2][i])^(mix[1][3]*state[3][i])
+        c = (mix[2][0]*state[0][i]) ^ (mix[2][1]*state[1][i])^(mix[2][2]*state[2][i])^(mix[2][3]*state[3][i])
+        d = (mix[3][0]*state[0][i]) ^ (mix[3][1]*state[1][i])^(mix[3][2]*state[2][i])^(mix[3][3]*state[3][i])
+        new_state.append([a,b,c,d])
+    
+    return np.array(new_state)
+"""
+def aes_Mix_Columns_Encrypt(state: np.ndarray) -> np.ndarray:
+    
+    def gf_mul(a, b):
+        p = 0
+        for _ in range(8):
+            if b & 1:
+                p ^= a
+            high_bit = a & 0x80  # 0x80 = 0b10000000
+            a = (a << 1) & 0xFF
+            if high_bit:
+                a ^= 0x1B  # 0x1B = 0b00011011 
+            b >>= 1
+        return p
+    result = state.copy()
+    
 
+    for col in range(4):
+        s0 = state[0][col]
+        s1 = state[1][col]
+        s2 = state[2][col]
+        s3 = state[3][col]
+        
+        result[0][col] = gf_mul(2, s0) ^ gf_mul(3, s1) ^ s2 ^ s3
+        result[1][col] = s0 ^ gf_mul(2, s1) ^ gf_mul(3, s2) ^ s3
+        result[2][col] = s0 ^ s1 ^ gf_mul(2, s2) ^ gf_mul(3, s3)
+        result[3][col] = gf_mul(3, s0) ^ s1 ^ s2 ^ gf_mul(2, s3)
+    
+    return result
 
-def aes_Mix_Columns_Decrypt(state: np.ndarray) -> np.ndarray: # 15
-    return
-
+def aes_Mix_Columns_Decrypt(state: np.ndarray) -> np.ndarray:
+    def gf_mul(a, b):
+        p = 0
+        for _ in range(8):
+            if b & 1:
+                p ^= a
+            high_bit = a & 0x80  # 0x80 = 0b10000000
+            a = (a << 1) & 0xFF
+            if high_bit:
+                a ^= 0x1B  # 0x1B = 0b00011011 
+            b >>= 1
+        return p
+        
+    result = state.copy()
+   
+    for col in range(4):
+        s0 = state[0][col]
+        s1 = state[1][col]
+        s2 = state[2][col]
+        s3 = state[3][col]
+       
+        result[0][col] = gf_mul(0x0E, s0) ^ gf_mul(0x0B, s1) ^ gf_mul(0x0D, s2) ^ gf_mul(0x09, s3)
+        result[1][col] = gf_mul(0x09, s0) ^ gf_mul(0x0E, s1) ^ gf_mul(0x0B, s2) ^ gf_mul(0x0D, s3)
+        result[2][col] = gf_mul(0x0D, s0) ^ gf_mul(0x09, s1) ^ gf_mul(0x0E, s2) ^ gf_mul(0x0B, s3)
+        result[3][col] = gf_mul(0x0B, s0) ^ gf_mul(0x0D, s1) ^ gf_mul(0x09, s2) ^ gf_mul(0x0E, s3)
+   
+    return result
 
 def aes_Apply_Encryption_Round(state: np.ndarray, roundKey: np.ndarray, sBox: np.ndarray) -> np.ndarray: # 16
     return
@@ -566,6 +662,6 @@ def rc4_Decrypt_Image(ciphertext: np.ndarray, key: str) -> np.ndarray:
 
 # ----------------------------------------------------------------------------------------------
 # ----------------------------------------------------------------------------------------------
-
-test_DES()
+test_AES()
+#test_DES()
 #test_RC4()
