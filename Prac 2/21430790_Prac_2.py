@@ -1,7 +1,7 @@
 import numpy as np
 import string
 from PIL import Image
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 
 # ----------------------------------------------------------------------------------------------
 # ----------------------------------------------------------------------------------------------
@@ -29,6 +29,8 @@ Changelog:
 '''
 
 
+
+    
 def test_DES():
     plaintext = "eiaofrjiouajsiof1124ajksnd"
     key = "12345678"
@@ -135,9 +137,13 @@ def test_AES():
     #print("@@@@@@@@@@@@@@@@@@")
     #print(aes_Shift_Rows_Decrypt(shifted))
     key = 'abcdefghijklmnopqrstuvwxyz123456'
+    plaintext = "pikachuplsdie"
     x = aes_Generate_Round_Keys(key,sBox)
-    print(x)
-
+    #print(x)
+    cipher =  aes_Encrypt_String(plaintext,key)
+    print(cipher)
+    plain = aes_Decrypt_String(cipher,key)
+    print(plain)
 # ----------------------------------------------------------------------------------------------
 # 3.1 AES Cipher
 # ----------------------------------------------------------------------------------------------
@@ -149,7 +155,7 @@ def aes_Generate_Round_Keys(key: str, sBox: np.ndarray) -> np.ndarray: # 1
     for i in range(0, len(key), 4):
         block = key[i:i+4]
         key_array.append(block)
-    print(key_array)
+    #print(key_array)
     round_constants = [0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40]
     
     w = key_array.copy()
@@ -223,10 +229,10 @@ def aes_Create_Input_States(inputBytes: np.ndarray) -> np.ndarray: # 3
     
     for i in range(0,len(states),4):
         temp = []
-        temp.append(i)
-        temp.append(i+1)
-        temp.append(i+2)
-        temp.append(i+3)
+        temp.append(states[i])
+        temp.append(states[i+1])
+        temp.append(states[i+2])
+        temp.append(states[i+3])
         total_states.append(temp)
     return np.array(total_states)
 
@@ -243,13 +249,51 @@ def aes_remove_Padding(paddedArray: np.ndarray) -> np.ndarray: # 4
 
 def aes_Encrypt_String(plaintext: str, key: str) -> np.ndarray: # 5
     sBox = np.load("AES_Arrays\\AES_Sbox_lookup.npy")
-    return
+
+    processed = aes_Preprocess_String_Plaintext(plaintext)
+
+    #print(f'processed: {processed}')
+    roundKeys = aes_Generate_Round_Keys(key,sBox)
+    #print(f'roundkeys: {roundKeys}')
+    input_states =  aes_Create_Input_States(processed)
+    #print(f'input: {input_states}')
+    encrypted_states =[]
+    for state in input_states:
+        encrypted = aes_Encrypt_State(state,roundKeys,sBox)
+        encrypted_states.append(encrypted)
+    
+    #print(f'encrypted: {encrypted_states}')
+    encrypted_data = np.array([], dtype=int)
+    for state in encrypted_states:
+        flattened_state = state.flatten()
+        encrypted_data = np.append(encrypted_data, flattened_state)
+    
+    return encrypted_data
+
 
 
 def aes_Decrypt_String(ciphertext: np.ndarray, key: str) -> str: # 6
     sBox = np.load("AES_Arrays\\AES_Sbox_lookup.npy")
     invsBox = np.load("AES_Arrays\\AES_Inverse_Sbox_lookup.npy")
-    return
+
+    roundKeys = aes_Generate_Round_Keys(key,sBox)
+    input_states = aes_Create_Input_States(ciphertext)
+    
+    decrypted_states = []
+    for state in input_states:
+        decrypted = aes_Decrypt_State(state,roundKeys,invsBox)
+        decrypted_states.append(decrypted)
+    
+    decrypted_data = np.array([], dtype=int)
+    for state in decrypted_states:
+        flattened_state = state.flatten()
+        decrypted_data = np.append(decrypted_data, flattened_state)
+    #print(decrypted_data)
+    decrypted_data = aes_remove_Padding(decrypted_data)
+    #print(decrypted_data)
+    decrypted_text = ''.join(chr(int(b)) for b in decrypted_data)
+    
+    return decrypted_text
 
 
 def aes_Preprocess_Image_Plaintext(plaintext: np.ndarray) -> np.ndarray: # 7
@@ -268,13 +312,8 @@ def aes_Decrypt_Image(ciphertext: np.ndarray, key: str) -> np.ndarray: # 9
 
 
 def aes_Add_Round_key(state: np.ndarray, roundKey: np.ndarray) -> np.ndarray: # 10
-    result = np.zeros_like(state)
-    
-    for i in range(4):
-        for j in range(4):
-            result[i, j] = state[i, j] ^ roundKey[i, j]
-    
-    return result
+    return np.bitwise_xor(state, roundKey)
+
 
 
 
@@ -287,7 +326,7 @@ def aes_Substitute_Bytes(state: np.ndarray, sBox: np.ndarray) -> np.ndarray: # 1
             col = byte & 0x0F
             result_byte = sBox[row][col]
             result_byte = result_byte[2:]
-            result_int = int(result_byte,16)
+            result_int = int(result_byte, 16)
             result[i][j] = result_int
     return result
 
@@ -375,16 +414,15 @@ def aes_Apply_Encryption_Round(state: np.ndarray, roundKey: np.ndarray, sBox: np
 
 def aes_Encrypt_State(state: np.ndarray, roundKeys: np.ndarray, sBox: np.ndarray) -> np.ndarray: # 17
     state = aes_Add_Round_key(state, roundKeys[0])
-    
     # rounds 1-13 
+
     for round_num in range(1, 14):
         state = aes_Apply_Encryption_Round(state, roundKeys[round_num], sBox)
-    
     # Final round 
     state = aes_Substitute_Bytes(state, sBox)   
     state = aes_Shift_Rows_Encrypt(state)
     state = aes_Add_Round_key(state, roundKeys[14])
-
+    return state
 
 def aes_Apply_Decryption_Round(state: np.ndarray, roundKey: np.ndarray, sBox: np.ndarray) -> np.ndarray: # 18
 
@@ -397,12 +435,13 @@ def aes_Apply_Decryption_Round(state: np.ndarray, roundKey: np.ndarray, sBox: np
 
 
 def aes_Decrypt_State(state: np.ndarray, roundKeys: np.ndarray, sBox: np.ndarray) -> np.ndarray: # 19
+    # Initial round
     state = aes_Add_Round_key(state, roundKeys[14])
     
-    # Reverse main rounds
+    # Main rounds
     for round_num in range(13, 0, -1):
         state = aes_Shift_Rows_Decrypt(state)
-        state = aes_Substitute_Bytes(state, sBox)   
+        state = aes_Substitute_Bytes(state, sBox)
         state = aes_Add_Round_key(state, roundKeys[round_num])
         state = aes_Mix_Columns_Decrypt(state)
     
@@ -503,15 +542,15 @@ def des_Encrypt_String(plaintext: str, key: str) -> np.ndarray: # 5
     invInitPerm = np.load("DES_Arrays\\DES_Inverse_Initial_Permutation.npy")
 
     text = des_Preprocess_String_Plaintext(plaintext)
-    print(f'original plaintext: {text}')
+    #print(f'original plaintext: {text}')
     keys = des_Generate_Round_Keys(key,keyPermChoice1,keyPermChoice2,keyRoundShifts)
     blocks = des_Create_Input_Blocks(text)
 
     ciphertext = []
     for b in blocks:
-        print(f"ENCRYPT B: {b}")
+        #print(f"ENCRYPT B: {b}")
         cipher = des_Process_Block(b,keys,initPerm,sBoxes,FexpansionBox,FpermutationChoice,invInitPerm)
-        print(f"CIPHER BLOCK ENCRYPTION: {cipher}")
+        #print(f"CIPHER BLOCK ENCRYPTION: {cipher}")
         for i in range(0,len(cipher),2):
             c = cipher[i:i+2]
             ciphertext.append(c)
@@ -533,7 +572,7 @@ def des_Decrypt_String(ciphertext: np.ndarray, key: str) -> str: # 6
 
     cipher_blocks = []
     cipher_blocks = des_Create_Input_Blocks(ciphertext)
-    print(f'cipherblocks: {cipher_blocks}')
+    #print(f'cipherblocks: {cipher_blocks}')
 
     keys = des_Generate_Round_Keys(key, keyPermChoice1, keyPermChoice2, keyRoundShifts)
     inv_keys = keys[::-1]  # Reverse the keys for decryption
@@ -626,11 +665,34 @@ def des_Process_Round(roundInputValue: str, roundKey: str, sBoxes: np.ndarray, e
 
 
 def des_Preprocess_Image_Plaintext(plaintext: np.ndarray) -> np.ndarray: # 9
-    return
+    flattened = plaintext.flatten()
+    
+
+    hex_values = [f'{value:02X}' for value in flattened]
+    
+    
+    block_size = 8
+    padding_length = block_size - (len(hex_values) % block_size)
+    if padding_length == 0:
+        padding_length = block_size
+    
+    # Apply PKCS5 padding (each padding byte = number of padding bytes)
+    padded_data = hex_values + [f'{padding_length:02X}'] * padding_length
+    
+    return np.array(padded_data)
 
 
 def des_Remove_Image_Padding(paddedArray: np.ndarray) -> np.ndarray: # 10
-    return
+
+    last_byte = paddedArray[-1]
+    pad_len = int(last_byte, 16)
+    
+    for i in range(1, pad_len + 1):
+        if paddedArray[-i] != f'{pad_len:02X}':
+            raise ValueError("Invalid padding detected")
+    
+    # Remove padding
+    return paddedArray[:-pad_len]
 
 
 def des_Encrypt_Image(plaintext: np.ndarray, key: str) -> np.ndarray: # 11
@@ -642,7 +704,23 @@ def des_Encrypt_Image(plaintext: np.ndarray, key: str) -> np.ndarray: # 11
     FpermutationChoice = np.load("DES_Arrays\\DES_F_Function_Permutation.npy")
     initPerm = np.load("DES_Arrays\\DES_Initial_Permutation.npy")
     invInitPerm = np.load("DES_Arrays\\DES_Inverse_Initial_Permutation.npy")
-    return
+    processed_data = des_Preprocess_Image_Plaintext(plaintext)
+    
+    # Generate round keys
+    keys = des_Generate_Round_Keys(key, keyPermChoice1, keyPermChoice2, keyRoundShifts)
+    
+    # Create input blocks
+    blocks = des_Create_Input_Blocks(processed_data)
+    
+    # Encrypt each block
+    ciphertext = []
+    for b in blocks:
+        cipher = des_Process_Block(b, keys, initPerm, sBoxes, FexpansionBox, FpermutationChoice, invInitPerm)
+        for i in range(0, len(cipher), 2):
+            c = cipher[i:i+2]
+            ciphertext.append(c)
+    
+    return np.array(ciphertext)
 
 
 def des_Decrypt_Image(ciphertext: np.ndarray, key: str) -> np.ndarray: # 12
@@ -654,7 +732,30 @@ def des_Decrypt_Image(ciphertext: np.ndarray, key: str) -> np.ndarray: # 12
     FpermutationChoice = np.load("DES_Arrays\\DES_F_Function_Permutation.npy")
     initPerm = np.load("DES_Arrays\\DES_Initial_Permutation.npy")
     invInitPerm = np.load("DES_Arrays\\DES_Inverse_Initial_Permutation.npy")
-    return
+    cipher_blocks = des_Create_Input_Blocks(ciphertext)
+    
+    # Generate and reverse the round keys for decryption
+    keys = des_Generate_Round_Keys(key, keyPermChoice1, keyPermChoice2, keyRoundShifts)
+    inv_keys = keys[::-1]  # Reverse the keys for decryption
+    
+    # Decrypt each block
+    plaintext = []
+    for b in cipher_blocks:
+        plain = des_Process_Block(b, inv_keys, initPerm, sBoxes, FexpansionBox, FpermutationChoice, invInitPerm)
+        for i in range(0, len(plain), 2):
+            p = plain[i:i+2]
+            plaintext.append(p)
+    
+    # Remove padding
+    decrypted = des_Remove_Image_Padding(np.array(plaintext))
+    
+    # Convert hex strings back to integers
+    decrypted_integers = np.array([int(hex_val, 16) for hex_val in decrypted], dtype=np.uint8)
+    
+    # Reshape back to original image dimensions (needs to be determined based on original shape)
+    # Note: You'll need to store or pass the original shape information to restore correctly
+    # For now, returning the 1D array
+    return decrypted_integers
 
 
 def des_Apply_Permutation(valueToPermute: str, permuteTable: np.ndarray, numBitsBeforePermute: int) -> str: # 13
@@ -800,5 +901,8 @@ def rc4_Decrypt_Image(ciphertext: np.ndarray, key: str) -> np.ndarray:
 # ----------------------------------------------------------------------------------------------
 # ----------------------------------------------------------------------------------------------
 test_AES()
+#key = 'abcdefghijklmnopqrstuvwxyz123456'
+#plaintext = "1111111111111111111"
+#test_result = debug_aes_encryption_decryption(plaintext,key)
 #test_DES()
 #test_RC4()
