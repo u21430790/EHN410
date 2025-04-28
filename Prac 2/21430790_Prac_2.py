@@ -1,6 +1,6 @@
 import numpy as np
 import string
-from PIL import Image
+#from PIL import Image
 #import matplotlib.pyplot as plt
 
 # ----------------------------------------------------------------------------------------------
@@ -31,156 +31,158 @@ Changelog:
 
 
     
-def test_DES():
-    plaintext = "eiaofrjiouajsiof1124ajksnd"
-    key = "12345678"
+# def test_DES():
+#     plaintext = "abcdefgid"
+#     key = "12345678"
 
 
 
-    keyPermChoice1 = np.load("DES_Arrays\\DES_Key_Permutation_Choice_1.npy")
-    keyPermChoice2 = np.load("DES_Arrays\\DES_Key_Permutation_Choice_2.npy")
-    keyRoundShifts = np.load("DES_Arrays\\DES_Round_Shifts.npy")
-    sBoxes = np.load("DES_Arrays\\DES_sBoxes.npy")
-    FexpansionBox = np.load("DES_Arrays\\DES_Expansion_Box.npy")
-    FpermutationChoice = np.load("DES_Arrays\\DES_F_Function_Permutation.npy")
-    initPerm = np.load("DES_Arrays\\DES_Initial_Permutation.npy")
-    invInitPerm = np.load("DES_Arrays\\DES_Inverse_Initial_Permutation.npy")
+#     keyPermChoice1 = np.load("DES_Arrays\\DES_Key_Permutation_Choice_1.npy")
+#     keyPermChoice2 = np.load("DES_Arrays\\DES_Key_Permutation_Choice_2.npy")
+#     keyRoundShifts = np.load("DES_Arrays\\DES_Round_Shifts.npy")
+#     sBoxes = np.load("DES_Arrays\\DES_sBoxes.npy")
+#     FexpansionBox = np.load("DES_Arrays\\DES_Expansion_Box.npy")
+#     FpermutationChoice = np.load("DES_Arrays\\DES_F_Function_Permutation.npy")
+#     initPerm = np.load("DES_Arrays\\DES_Initial_Permutation.npy")
+#     invInitPerm = np.load("DES_Arrays\\DES_Inverse_Initial_Permutation.npy")
 
-    ciphertext = des_Encrypt_String(plaintext,key)
-    #print(ciphertext)
-    decrypted = des_Decrypt_String(ciphertext,key)
-    #print(decrypted)
-    img = Image.open('moyse.jpg')
-    img_np = np.array(img)
-    image_dim = img_np.shape
-    # Encrypt
-    #key = "ToonMouse2025"
-    encrypted_img_np = des_Encrypt_Image(img_np, key)
-    #encrypted_img_np = encrypted_img_np.reshape(image_dim)
-    print(encrypted_img_np)
-    encrypted_img_np = aes_des_rc4_Convert_To_Image(encrypted_img_np,image_dim)
-    Image.fromarray(encrypted_img_np).save('encrypted_jerry_DES.png')
+#     ciphertext = des_Encrypt_String(plaintext,key)
+#     #print(ciphertext)
+#     decrypted = des_Decrypt_String(ciphertext,key)
+#     #print(decrypted)
+#     """
+#     img = Image.open('moyse.jpg')
+#     img_np = np.array(img)
+#     image_dim = img_np.shape
+#     # Encrypt
+#     #key = "ToonMouse2025"
+#     encrypted_img_np = des_Encrypt_Image(img_np, key)
+#     #encrypted_img_np = encrypted_img_np.reshape(image_dim)
+#     print(encrypted_img_np)
+#     encrypted_img_np = aes_des_rc4_Convert_To_Image(encrypted_img_np,image_dim)
+#     Image.fromarray(encrypted_img_np).save('encrypted_jerry_DES.png')
     
-    # Decrypt
-    decrypted_img_np = des_Decrypt_Image(encrypted_img_np, key)
-    print(decrypted_img_np)
-    #decrypted_img_np = decrypted_img_np.reshape(image_dim)
-    decrypted_img_np = aes_des_rc4_Convert_To_Image(decrypted_img_np,image_dim)
-    Image.fromarray(decrypted_img_np).save('decrypted_jerry_DES.png')
-    """
-    print("keyPermChoice1 #####################")
-    print(keyPermChoice1)
-    print("keyPermChoice2 #####################")
-    print(keyPermChoice2)
-    print("keyRoundShifts #####################")
-    print(keyRoundShifts)
-    print("#############################################")
+#     # Decrypt
+#     decrypted_img_np = des_Decrypt_Image(encrypted_img_np, key)
+#     print(decrypted_img_np)
+#     #decrypted_img_np = decrypted_img_np.reshape(image_dim)
+#     decrypted_img_np = aes_des_rc4_Convert_To_Image(decrypted_img_np,image_dim)
+#     Image.fromarray(decrypted_img_np).save('decrypted_jerry_DES.png')
+#     """
+#     #print("keyPermChoice1 #####################")
+#     #print(keyPermChoice1)
+#     #print("keyPermChoice2 #####################")
+#     #print(keyPermChoice2)
+#     #print("keyRoundShifts #####################")
+#     #print(keyRoundShifts)
+#     #print("#############################################")
 
-    print("sBoxes #############################")
-    print(sBoxes)
-    print("FexpansionBox ######################")
-    print(FexpansionBox)
-    print("FpermutationChoice #################")
-    print(FpermutationChoice)
-    print("initPerm ###########################")
-    print(initPerm)
-    print("invInitPerm ########################")
-    print(invInitPerm)
-    """
-    #x = des_Generate_Round_Keys(key,keyPermChoice1,keyPermChoice2,keyRoundShifts)
-    #print(x)
+#     #print("sBoxes #############################")
+#     #print(sBoxes)
+#     #print("FexpansionBox ######################")
+#     #print(FexpansionBox)
+#     #print("FpermutationChoice #################")
+#     #print(FpermutationChoice)
+#     #print("initPerm ###########################")
+#     #print(initPerm)
+#     #print("invInitPerm ########################")
+#     #print(invInitPerm)
+#     """
+#     #x = des_Generate_Round_Keys(key,keyPermChoice1,keyPermChoice2,keyRoundShifts)
+#     #print(x)
     
-    #print(des_Process_Round("FF00785500FF8066","502CAC572AC2",sBoxes,FexpansionBox,FpermutationChoice ))
+#     #print(des_Process_Round("FF00785500FF8066","502CAC572AC2",sBoxes,FexpansionBox,FpermutationChoice ))
+#     """
 
-def test_RC4():
-    """
-    key = "MyS3cr3tK3y#2025"
-    plaintext = "I am the one who meows"
-    cipher = rc4_Encrypt_String(plaintext,key)
-    print(cipher)
-    decrypted = rc4_Decrypt_String(cipher,key)
-    print(decrypted)
-    """
-
-
-    # Load image
-    img = Image.open('jerry.png')
-    img_np = np.array(img)
-    image_dim = img_np.shape
-    # Encrypt
-    key = "ToonMouse2025"
-    encrypted_img_np = rc4_Encrypt_Image(img_np, key)
-    #encrypted_img_np = encrypted_img_np.reshape(image_dim)
-    encrypted_img_np2 = aes_des_rc4_Convert_To_Image(encrypted_img_np,image_dim)
-    #decrypted_img_np = aes_des_rc4_Convert_To_Image(decrypted_img_np,image_dim)
-    Image.fromarray(encrypted_img_np2).save('encrypted_jerry.png')
-
-    # Decrypt
-    decrypted_img_np = rc4_Decrypt_Image(encrypted_img_np, key)
-    #decrypted_img_np = decrypted_img_np.reshape(image_dim)
-    decrypted_img_np = aes_des_rc4_Convert_To_Image(decrypted_img_np,image_dim)
-    Image.fromarray(decrypted_img_np).save('decrypted_jerry.png')
-
-def print_2d_array_hex(array):
-    for row in array:
-        for val in row:
-            print(f"{val:0X}", end=" ")  # 4-digit hex, uppercase
-        print()
+# def test_RC4():
+#     """
+#     key = "MyS3cr3tK3y#2025"
+#     plaintext = "I am the one who meows"
+#     cipher = rc4_Encrypt_String(plaintext,key)
+#     print(cipher)
+#     decrypted = rc4_Decrypt_String(cipher,key)
+#     print(decrypted)
+#     """
 
 
-def test_AES():
-    sBox = np.load("AES_Arrays\\AES_Sbox_lookup.npy")
-    invsBox = np.load("AES_Arrays\\AES_Inverse_Sbox_lookup.npy")
-    #print("SBOX #############################################")
-    #print(sBox)
-    #print("INVSBOX ##########################################")
-    #print(invsBox)
-    mix_column_state = [ [0x52,0xDC,0xA2,0xE3],
-                        [0xDB,0xCE,0xA2,0x43],
-                        [0xB4,0xAD,0xC4,0xC1],
-                        [0xE3,0xD5,0xA3,0xC5]
-                        ]
+#     # Load image
+#     img = Image.open('jerry.png')
+#     img_np = np.array(img)
+#     image_dim = img_np.shape
+#     # Encrypt
+#     key = "ToonMouse2025"
+#     encrypted_img_np = rc4_Encrypt_Image(img_np, key)
+#     #encrypted_img_np = encrypted_img_np.reshape(image_dim)
+#     encrypted_img_np2 = aes_des_rc4_Convert_To_Image(encrypted_img_np,image_dim)
+#     #decrypted_img_np = aes_des_rc4_Convert_To_Image(decrypted_img_np,image_dim)
+#     Image.fromarray(encrypted_img_np2).save('encrypted_jerry.png')
 
-    #s =aes_Mix_Columns_Encrypt(np.array(mix_column_state))
-    #print_2d_array_hex(s)
-    #e = aes_Mix_Columns_Decrypt(s)
-    #print("XXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-    #print_2d_array_hex(e)
+#     # Decrypt
+#     decrypted_img_np = rc4_Decrypt_Image(encrypted_img_np, key)
+#     #decrypted_img_np = decrypted_img_np.reshape(image_dim)
+#     decrypted_img_np = aes_des_rc4_Convert_To_Image(decrypted_img_np,image_dim)
+#     Image.fromarray(decrypted_img_np).save('decrypted_jerry.png')
 
-    #f = aes_Substitute_Bytes(e,sBox)
-    #print("XXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-    #print_2d_array_hex(f)
-    #print(f)
-    #print("@@@@@@@@@@@@@@")
-    #shifted = aes_Shift_Rows_Encrypt(f)
-    #print(shifted)
-    #print("@@@@@@@@@@@@@@@@@@")
-    #print(aes_Shift_Rows_Decrypt(shifted))
-    key = 'abcdefghijklmnopqrstuvwxyz123456'
-    plaintext = "pikachuplsdie"
-    x = aes_Generate_Round_Keys(key,sBox)
-    #print(x)
-    #cipher =  aes_Encrypt_String(plaintext,key)
-    #print(cipher)
-    #plain = aes_Decrypt_String(cipher,key)
-    #print(plain)
-       # Load image
-    img = Image.open('moyse.jpg')
-    img_np = np.array(img)
-    image_dim = img_np.shape
-    # Encrypt
-    #key = "ToonMouse2025"
-    encrypted_img_np = aes_Encrypt_Image(img_np, key)
-    #encrypted_img_np = encrypted_img_np.reshape(image_dim)
-    encrypted_img_np2 = aes_des_rc4_Convert_To_Image(encrypted_img_np,image_dim)
-    #decrypted_img_np = aes_des_rc4_Convert_To_Image(decrypted_img_np,image_dim)
-    Image.fromarray(encrypted_img_np2).save('encrypted_jerry_AES.png')
+# def print_2d_array_hex(array):
+#     for row in array:
+#         for val in row:
+#             print(f"{val:0X}", end=" ")  # 4-digit hex, uppercase
+#         print()
 
-    # Decrypt
-    decrypted_img_np = aes_Decrypt_Image(encrypted_img_np, key)
-    #decrypted_img_np = decrypted_img_np.reshape(image_dim)
-    decrypted_img_np = aes_des_rc4_Convert_To_Image(decrypted_img_np,image_dim)
-    Image.fromarray(decrypted_img_np).save('decrypted_jerry_AES.png')
+
+# def test_AES():
+#     sBox = np.load("AES_Arrays\\AES_Sbox_lookup.npy")
+#     invsBox = np.load("AES_Arrays\\AES_Inverse_Sbox_lookup.npy")
+#     #print("SBOX #############################################")
+#     #print(sBox)
+#     #print("INVSBOX ##########################################")
+#     #print(invsBox)
+#     mix_column_state = [ [0x52,0xDC,0xA2,0xE3],
+#                         [0xDB,0xCE,0xA2,0x43],
+#                         [0xB4,0xAD,0xC4,0xC1],
+#                         [0xE3,0xD5,0xA3,0xC5]
+#                         ]
+
+#     #s =aes_Mix_Columns_Encrypt(np.array(mix_column_state))
+#     #print_2d_array_hex(s)
+#     #e = aes_Mix_Columns_Decrypt(s)
+#     #print("XXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+#     #print_2d_array_hex(e)
+
+#     #f = aes_Substitute_Bytes(e,sBox)
+#     #print("XXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+#     #print_2d_array_hex(f)
+#     #print(f)
+#     #print("@@@@@@@@@@@@@@")
+#     #shifted = aes_Shift_Rows_Encrypt(f)
+#     #print(shifted)
+#     #print("@@@@@@@@@@@@@@@@@@")
+#     #print(aes_Shift_Rows_Decrypt(shifted))
+#     key = 'abcdefghijklmnopqrstuvwxyz123456'
+#     plaintext = "pikachuplsdie"
+#     x = aes_Generate_Round_Keys(key,sBox)
+#     #print(x)
+#     #cipher =  aes_Encrypt_String(plaintext,key)
+#     #print(cipher)
+#     #plain = aes_Decrypt_String(cipher,key)
+#     #print(plain)
+#        # Load image
+#     img = Image.open('moyse.jpg')
+#     img_np = np.array(img)
+#     image_dim = img_np.shape
+#     # Encrypt
+#     #key = "ToonMouse2025"
+#     encrypted_img_np = aes_Encrypt_Image(img_np, key)
+#     #encrypted_img_np = encrypted_img_np.reshape(image_dim)
+#     encrypted_img_np2 = aes_des_rc4_Convert_To_Image(encrypted_img_np,image_dim)
+#     #decrypted_img_np = aes_des_rc4_Convert_To_Image(decrypted_img_np,image_dim)
+#     Image.fromarray(encrypted_img_np2).save('encrypted_jerry_AES.png')
+
+#     # Decrypt
+#     decrypted_img_np = aes_Decrypt_Image(encrypted_img_np, key)
+#     #decrypted_img_np = decrypted_img_np.reshape(image_dim)
+#     decrypted_img_np = aes_des_rc4_Convert_To_Image(decrypted_img_np,image_dim)
+#     Image.fromarray(decrypted_img_np).save('decrypted_jerry_AES.png')
 # ----------------------------------------------------------------------------------------------
 # 3.1 AES Cipher
 # ----------------------------------------------------------------------------------------------
@@ -602,11 +604,13 @@ def des_Create_Input_Blocks(processedArray: np.ndarray) -> np.ndarray: # 3
 
 
 def des_Remove_String_Padding(paddedArray: np.ndarray) -> np.ndarray: # 4
-    
     padding = paddedArray[-1]
-    pad_len = int(padding,16)
+    pad_len = int(padding, 16)
 
-    return paddedArray[:-pad_len] 
+    if not (0 <= pad_len <= 8):
+        return paddedArray[:-8]
+    
+    return paddedArray[:-pad_len]
 
 
 def des_Encrypt_String(plaintext: str, key: str) -> np.ndarray: # 5
@@ -665,8 +669,8 @@ def des_Decrypt_String(ciphertext: np.ndarray, key: str) -> str: # 6
             plaintext.append(p)
     
     # Remove padding
-    #decrypted = des_Remove_String_Padding(np.array(plaintext))
-    decrypted = plaintext
+    decrypted = des_Remove_String_Padding(np.array(plaintext))
+    #decrypted = plaintext
     #print(f'decrypted_plaintext: {decrypted}')
  
     final_decrypted = ""
@@ -811,14 +815,14 @@ def des_Decrypt_Image(ciphertext: np.ndarray, key: str) -> np.ndarray: # 12
     FpermutationChoice = np.load("DES_Arrays\\DES_F_Function_Permutation.npy")
     initPerm = np.load("DES_Arrays\\DES_Initial_Permutation.npy")
     invInitPerm = np.load("DES_Arrays\\DES_Inverse_Initial_Permutation.npy")
-    print("ciphertext in des fn")
-    print(ciphertext)
+    #print("ciphertext in des fn")
+    #print(ciphertext)
     ciphertext_flat = ciphertext.flatten()
-    print("ciphertext in des flattened")
-    print(ciphertext_flat)
+    #print("ciphertext in des flattened")
+    #print(ciphertext_flat)
     ciphertext_hex = np.array([f'{x:02x}'for x in ciphertext_flat])
-    print("ciphertext hex")
-    print(ciphertext_hex)
+    #print("ciphertext hex")
+    #print(ciphertext_hex)
     cipher_blocks = des_Create_Input_Blocks(ciphertext_hex)
     
     # Generate and reverse the round keys for decryption
@@ -828,7 +832,7 @@ def des_Decrypt_Image(ciphertext: np.ndarray, key: str) -> np.ndarray: # 12
     # Decrypt each block
     plaintext = []
     for b in cipher_blocks:
-        print(f"block: {b}")
+        #print(f"block: {b}")
         plain = des_Process_Block(b, inv_keys, initPerm, sBoxes, FexpansionBox, FpermutationChoice, invInitPerm)
         for i in range(0, len(plain), 2):
             p = plain[i:i+2]
@@ -985,7 +989,7 @@ def rc4_Decrypt_Image(ciphertext: np.ndarray, key: str) -> np.ndarray:
 
 # ----------------------------------------------------------------------------------------------
 # ----------------------------------------------------------------------------------------------
-test_AES()
+#test_AES()
 #key = 'abcdefghijklmnopqrstuvwxyz123456'
 #plaintext = "1111111111111111111"
 #test_result = debug_aes_encryption_decryption(plaintext,key)
