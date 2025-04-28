@@ -110,10 +110,10 @@ def print_2d_array_hex(array):
 def test_AES():
     sBox = np.load("AES_Arrays\\AES_Sbox_lookup.npy")
     invsBox = np.load("AES_Arrays\\AES_Inverse_Sbox_lookup.npy")
-    print("SBOX #############################################")
-    print(sBox)
-    print("INVSBOX ##########################################")
-    print(invsBox)
+    #print("SBOX #############################################")
+    #print(sBox)
+    #print("INVSBOX ##########################################")
+    #print(invsBox)
     mix_column_state = [ [0x52,0xDC,0xA2,0xE3],
                         [0xDB,0xCE,0xA2,0x43],
                         [0xB4,0xAD,0xC4,0xC1],
@@ -137,21 +137,70 @@ def test_AES():
     #print(aes_Shift_Rows_Decrypt(shifted))
     key = 'abcdefghijklmnopqrstuvwxyz123456'
     x = aes_Generate_Round_Keys(key,sBox)
+    print(x)
 
 # ----------------------------------------------------------------------------------------------
 # 3.1 AES Cipher
 # ----------------------------------------------------------------------------------------------
 
-def aes_Generate_Round_Keys(key: str, sBox: np.ndarray) -> np.ndarray: # 1
+
+def aes_Generate_Round_Keys(key: str, sBox: np.ndarray) -> np.ndarray:
     key = [ord(k) for k in key]
     key_array = []
-    for i in range(0,len(key),4):
+    for i in range(0, len(key), 4):
         block = key[i:i+4]
         key_array.append(block)
     print(key_array)
+    round_constants = [0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40]
     
-    round_constants = []
-    return
+    w = key_array.copy()
+    rcon_iter = 0
+
+    while len(w) < 60:
+        temp = w[-1].copy()
+        
+        # Every 8 words (for AES-256)
+        if len(w) % 8 == 0:
+            # RotWord: Rotate the word
+            temp = temp[1:] + [temp[0]]
+            
+            # SubWord: Substitute each byte using the S-box
+            for i in range(4):
+                row = (temp[i] >> 4) & 0x0F
+                col = temp[i] & 0x0F
+                result_byte = sBox[row][col]
+                # Convert from hex string (like '0x63') to integer
+                result_byte = result_byte[2:]  # Remove '0x' prefix
+                temp[i] = int(result_byte, 16)
+            
+            # XOR with round constant
+            temp[0] ^= round_constants[rcon_iter]
+            rcon_iter += 1
+        
+        # For AES-256, we also apply SubWord every 4 words after the 8th word
+        elif len(w) % 8 == 4:
+            # SubWord: Substitute each byte using the S-box
+            for i in range(4):
+                row = (temp[i] >> 4) & 0x0F
+                col = temp[i] & 0x0F
+                result_byte = sBox[row][col]
+                # Convert from hex string to integer
+                result_byte = result_byte[2:]  # Remove '0x' prefix
+                temp[i] = int(result_byte, 16)
+        
+        # XOR with the word 8 positions back
+        for i in range(4):
+            temp[i] ^= w[-8][i]
+        
+        w.append(temp)
+    
+    round_keys = []
+    for i in range(0, len(w), 4):
+        round_key = np.array([w[i], w[i+1], w[i+2], w[i+3]]).T
+        round_keys.append(round_key)
+    
+    return np.array(round_keys)
+
 
 
 def aes_Preprocess_String_Plaintext(plaintext: str) -> np.ndarray:
