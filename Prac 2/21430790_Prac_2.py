@@ -1,7 +1,6 @@
 import numpy as np
 import string
 from PIL import Image
-import numpy as np
 import matplotlib.pyplot as plt
 
 # ----------------------------------------------------------------------------------------------
@@ -144,7 +143,7 @@ def test_AES():
 # ----------------------------------------------------------------------------------------------
 
 
-def aes_Generate_Round_Keys(key: str, sBox: np.ndarray) -> np.ndarray:
+def aes_Generate_Round_Keys(key: str, sBox: np.ndarray) -> np.ndarray: # 1
     key = [ord(k) for k in key]
     key_array = []
     for i in range(0, len(key), 4):
@@ -159,36 +158,35 @@ def aes_Generate_Round_Keys(key: str, sBox: np.ndarray) -> np.ndarray:
     while len(w) < 60:
         temp = w[-1].copy()
         
-        # Every 8 words (for AES-256)
+        #  multiples of 8 gets affectes
         if len(w) % 8 == 0:
-            # RotWord: Rotate the word
+            # Rotate
             temp = temp[1:] + [temp[0]]
             
-            # SubWord: Substitute each byte using the S-box
+            # Sub bytes
             for i in range(4):
                 row = (temp[i] >> 4) & 0x0F
                 col = temp[i] & 0x0F
                 result_byte = sBox[row][col]
-                # Convert from hex string (like '0x63') to integer
-                result_byte = result_byte[2:]  # Remove '0x' prefix
+                result_byte = result_byte[2:]  
                 temp[i] = int(result_byte, 16)
             
-            # XOR with round constant
+            # xor round con
             temp[0] ^= round_constants[rcon_iter]
             rcon_iter += 1
         
-        # For AES-256, we also apply SubWord every 4 words after the 8th word
+        # sub every 4 words after 8th byte
         elif len(w) % 8 == 4:
-            # SubWord: Substitute each byte using the S-box
+            # Sub bytes
             for i in range(4):
                 row = (temp[i] >> 4) & 0x0F
                 col = temp[i] & 0x0F
                 result_byte = sBox[row][col]
                 # Convert from hex string to integer
-                result_byte = result_byte[2:]  # Remove '0x' prefix
+                result_byte = result_byte[2:]  
                 temp[i] = int(result_byte, 16)
         
-        # XOR with the word 8 positions back
+        # xor with word *-8
         for i in range(4):
             temp[i] ^= w[-8][i]
         
@@ -203,28 +201,44 @@ def aes_Generate_Round_Keys(key: str, sBox: np.ndarray) -> np.ndarray:
 
 
 
-def aes_Preprocess_String_Plaintext(plaintext: str) -> np.ndarray:
+def aes_Preprocess_String_Plaintext(plaintext: str) -> np.ndarray: # 2
 
-    plain_bytes = []
-
-    for char in plaintext:
-        plain_bytes.append(char.encode('ascii').hex())
+    ascii_values = [ord(char) for char in plaintext]
     
-
-    pad_len = 16 - (len(plain_bytes) % 16)
+    block_size = 16
+    padding_length = block_size - (len(ascii_values) % block_size)
+    if padding_length == 0:
+        padding_length = block_size
     
+    padded_data = ascii_values + [padding_length] * padding_length
 
-    padded_bytes = plain_bytes + [pad_len] * pad_len
-    
-    return np.array(padded_bytes, dtype=int)
+    return np.array(padded_data, dtype=int)
 
 
 def aes_Create_Input_States(inputBytes: np.ndarray) -> np.ndarray: # 3
-    return
+    total_states = []
+    states = []
+    for i in range(0,len(inputBytes),4):
+        states.append(inputBytes[i:i+4])
+    
+    for i in range(0,len(states),4):
+        temp = []
+        temp.append(i)
+        temp.append(i+1)
+        temp.append(i+2)
+        temp.append(i+3)
+        total_states.append(temp)
+    return np.array(total_states)
 
 
 def aes_remove_Padding(paddedArray: np.ndarray) -> np.ndarray: # 4
-    return
+    padding_length = paddedArray[-1]
+    
+    for i in range(1, padding_length + 1):
+        if i <= len(paddedArray) and paddedArray[-i] != padding_length:
+            return paddedArray
+    
+    return paddedArray[:-padding_length]
 
 
 def aes_Encrypt_String(plaintext: str, key: str) -> np.ndarray: # 5
@@ -254,10 +268,17 @@ def aes_Decrypt_Image(ciphertext: np.ndarray, key: str) -> np.ndarray: # 9
 
 
 def aes_Add_Round_key(state: np.ndarray, roundKey: np.ndarray) -> np.ndarray: # 10
-    return
+    result = np.zeros_like(state)
+    
+    for i in range(4):
+        for j in range(4):
+            result[i, j] = state[i, j] ^ roundKey[i, j]
+    
+    return result
 
 
-def aes_Substitute_Bytes(state: np.ndarray, sBox: np.ndarray) -> np.ndarray:
+
+def aes_Substitute_Bytes(state: np.ndarray, sBox: np.ndarray) -> np.ndarray: # 11
     result = state.copy()
     for i in range(4):
         for j in range(4):
@@ -286,7 +307,7 @@ def aes_Shift_Rows_Decrypt(state: np.ndarray) -> np.ndarray: # 13
     return state
 
 
-def aes_Mix_Columns_Encrypt(state: np.ndarray) -> np.ndarray:
+def aes_Mix_Columns_Encrypt(state: np.ndarray) -> np.ndarray: # 14
     
     def gf_mul(a, b):
         p = 0
@@ -315,7 +336,7 @@ def aes_Mix_Columns_Encrypt(state: np.ndarray) -> np.ndarray:
     
     return result
 
-def aes_Mix_Columns_Decrypt(state: np.ndarray) -> np.ndarray:
+def aes_Mix_Columns_Decrypt(state: np.ndarray) -> np.ndarray: # 15
     def gf_mul(a, b):
         p = 0
         for _ in range(8):
@@ -344,30 +365,81 @@ def aes_Mix_Columns_Decrypt(state: np.ndarray) -> np.ndarray:
     return result
 
 def aes_Apply_Encryption_Round(state: np.ndarray, roundKey: np.ndarray, sBox: np.ndarray) -> np.ndarray: # 16
-    return
+    state = aes_Substitute_Bytes(state, sBox)
+    state = aes_Shift_Rows_Encrypt(state)
+    state = aes_Mix_Columns_Encrypt(state)
+    state = aes_Add_Round_key(state, roundKey)
+    
+    return state
 
 
 def aes_Encrypt_State(state: np.ndarray, roundKeys: np.ndarray, sBox: np.ndarray) -> np.ndarray: # 17
-    return
+    state = aes_Add_Round_key(state, roundKeys[0])
+    
+    # rounds 1-13 
+    for round_num in range(1, 14):
+        state = aes_Apply_Encryption_Round(state, roundKeys[round_num], sBox)
+    
+    # Final round 
+    state = aes_Substitute_Bytes(state, sBox)   
+    state = aes_Shift_Rows_Encrypt(state)
+    state = aes_Add_Round_key(state, roundKeys[14])
 
 
 def aes_Apply_Decryption_Round(state: np.ndarray, roundKey: np.ndarray, sBox: np.ndarray) -> np.ndarray: # 18
-    return
+
+    state = aes_Add_Round_key(state, roundKey)
+    state = aes_Mix_Columns_Decrypt(state)
+    state = aes_Shift_Rows_Decrypt(state)
+    state = aes_Substitute_Bytes(state, sBox)
+    
+    return state
 
 
 def aes_Decrypt_State(state: np.ndarray, roundKeys: np.ndarray, sBox: np.ndarray) -> np.ndarray: # 19
-    return
+    state = aes_Add_Round_key(state, roundKeys[14])
+    
+    # Reverse main rounds
+    for round_num in range(13, 0, -1):
+        state = aes_Shift_Rows_Decrypt(state)
+        state = aes_Substitute_Bytes(state, sBox)   
+        state = aes_Add_Round_key(state, roundKeys[round_num])
+        state = aes_Mix_Columns_Decrypt(state)
+    
+    # Final round
+    state = aes_Shift_Rows_Decrypt(state)
+    state = aes_Substitute_Bytes(state, sBox)
+    state = aes_Add_Round_key(state, roundKeys[0])
+    
+    return state
 
 
 def aes_des_rc4_Convert_To_Image(arrayToConvert: np.ndarray, originalShape: tuple) -> np.ndarray: # 20
-    return
+    result = np.zeros(originalShape, dtype=np.uint8)
+    expected_size = originalShape[0] * originalShape[1] * originalShape[2]
+
+    # If the array is smaller than the original image, we need padding
+    if len(arrayToConvert) < expected_size:
+        padded_array = np.zeros(expected_size, dtype=np.uint8)
+        padded_array[:len(arrayToConvert)] = arrayToConvert
+        result = padded_array.reshape(originalShape)
+    
+    # If the array is larger than the original image, we need to truncate
+    elif len(arrayToConvert) > expected_size:
+        result = arrayToConvert[:expected_size].reshape(originalShape)
+    
+    # If the array is exactly the right size, just reshape
+    else:
+        result = arrayToConvert.reshape(originalShape)
+    
+    return result
 
 
 # ----------------------------------------------------------------------------------------------
 # 3.2 DES Cipher
 # ----------------------------------------------------------------------------------------------
     
-def des_Generate_Round_Keys(key: str, permutedChoice1, permutedChoice2, roundShifts) -> np.ndarray:
+def des_Generate_Round_Keys(key: str, permutedChoice1, permutedChoice2, roundShifts) -> np.ndarray: # 1
     key_str = key.encode('ascii').hex()
     permed1 = des_Apply_Permutation(key_str, permutedChoice1, 64)
     
@@ -404,7 +476,7 @@ def des_Preprocess_String_Plaintext(plaintext: str) -> np.ndarray: # 2
 
 def des_Create_Input_Blocks(processedArray: np.ndarray) -> np.ndarray: # 3
     blocks = []
-    print(f'LENGTH DURING BLOCK CREATION : {len(processedArray)}')
+    #print(f'LENGTH DURING BLOCK CREATION : {len(processedArray)}')
     for i in range(0,len(processedArray),8):
         block = processedArray[i:i+8]
         block_str = ''.join(block)
@@ -447,7 +519,7 @@ def des_Encrypt_String(plaintext: str, key: str) -> np.ndarray: # 5
     return np.array(ciphertext)
 
 
-def des_Decrypt_String(ciphertext: np.ndarray, key: str) -> str:
+def des_Decrypt_String(ciphertext: np.ndarray, key: str) -> str: # 6
     # Load required tables
     keyPermChoice1 = np.load("DES_Arrays\\DES_Key_Permutation_Choice_1.npy")
     keyPermChoice2 = np.load("DES_Arrays\\DES_Key_Permutation_Choice_2.npy")
@@ -478,7 +550,7 @@ def des_Decrypt_String(ciphertext: np.ndarray, key: str) -> str:
     # Remove padding
     #decrypted = des_Remove_String_Padding(np.array(plaintext))
     decrypted = plaintext
-    print(f'decrypted_plaintext: {decrypted}')
+    #print(f'decrypted_plaintext: {decrypted}')
  
     final_decrypted = ""
     for d in decrypted:
@@ -701,7 +773,7 @@ def rc4_Decrypt_String(ciphertext: np.ndarray, key: str) -> str: # 6
     return plaintext
 
 
-def rc4_Encrypt_Image(plaintext: np.ndarray, key: str) -> np.ndarray:
+def rc4_Encrypt_Image(plaintext: np.ndarray, key: str) -> np.ndarray: # 7
 
     flat = plaintext.flatten()
     
