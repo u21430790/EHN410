@@ -93,16 +93,16 @@ def test_DES():
     #print(des_Process_Round("FF00785500FF8066","502CAC572AC2",sBoxes,FexpansionBox,FpermutationChoice ))
 
 def test_RC4():
-    """
+    
     key = "MyS3cr3tK3y#2025"
     plaintext = "I am the one who meows"
     cipher = rc4_Encrypt_String(plaintext,key)
     print(cipher)
     decrypted = rc4_Decrypt_String(cipher,key)
     print(decrypted)
+    
+
     """
-
-
     # Load image
     img = Image.open('jerry.png')
     img_np = np.array(img)
@@ -120,7 +120,7 @@ def test_RC4():
     #decrypted_img_np = decrypted_img_np.reshape(image_dim)
     decrypted_img_np = aes_des_rc4_Convert_To_Image(decrypted_img_np,image_dim)
     Image.fromarray(decrypted_img_np).save('decrypted_jerry.png')
-
+    """
 def print_2d_array_hex(array):
     for row in array:
         for val in row:
@@ -985,9 +985,9 @@ def rc4_Decrypt_Image(ciphertext: np.ndarray, key: str) -> np.ndarray:
 
 # ----------------------------------------------------------------------------------------------
 # ----------------------------------------------------------------------------------------------
-test_AES()
+#test_AES()
 #key = 'abcdefghijklmnopqrstuvwxyz123456'
 #plaintext = "1111111111111111111"
 #test_result = debug_aes_encryption_decryption(plaintext,key)
 #test_DES()
-#test_RC4()
+test_RC4()
