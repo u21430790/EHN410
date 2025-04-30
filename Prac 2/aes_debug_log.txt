@@ -1,0 +1,1941 @@
+Starting AES debug test...
+Plaintext: '1111111111111111111'
+Key: 'abcdefghijklmnopqrstuvwxyz123456'
+
+Step 1: Preprocessing plaintext
+Processed plaintext: [49 49 49 49 49 49 49 49 49 49 49 49 49 49 49 49 49 49 49 13 13 13 13 13
+ 13 13 13 13 13 13 13 13]
+
+Step 2: Generating round keys
+Number of round keys generated: 15
+
+Step 3: Creating input states
+Number of input states: 2
+First state shape: (4, 4)
+
+Step 4: Encrypting state by state
+
+Encrypting state 1:
+Initial state:
+[[49 49 49 49]
+ [49 49 49 49]
+ [49 49 49 49]
+ [49 49 49 49]]
+After initial AddRoundKey:
+[[80 84 88 92]
+ [83 87 91 95]
+ [82 86 90 94]
+ [85 89 93 65]]
+
+Round 1:
+After SubBytes:
+[[ 83  32 106  74]
+ [237  91  57 207]
+ [  0 177 190  88]
+ [252 203  76 131]]
+After ShiftRows:
+[[ 83  32 106  74]
+ [ 91  57 207 237]
+ [190  88   0 177]
+ [131 252 203  76]]
+After MixColumns:
+[[118 175  85  69]
+ [191  70  36  15]
+ [241 182 227  10]
+ [ 13 226 252  26]]
+After AddRoundKey:
+[[  7 218  44 118]
+ [205  48  94  59]
+ [130 193 210  63]
+ [121 154 206  44]]
+
+Round 2:
+After SubBytes:
+[[197  87 113  56]
+ [189   4  88 226]
+ [ 19 120 181 117]
+ [182 184 139 113]]
+After ShiftRows:
+[[197  87 113  56]
+ [  4  88 226 189]
+ [181 117  19 120]
+ [113 182 184 139]]
+After MixColumns:
+[[ 89 133 116  95]
+ [120 206  35  90]
+ [ 35  36 102 243]
+ [  7 163   9 128]]
+After AddRoundKey:
+[[ 33 152   0  70]
+ [140  92 219 204]
+ [ 69  37  12 246]
+ [160 108 170  83]]
+
+Round 3:
+After SubBytes:
+[[253  70  99  90]
+ [100  74 185  75]
+ [110  63 254  66]
+ [224  80 172 237]]
+After ShiftRows:
+[[253  70  99  90]
+ [ 74 185  75 100]
+ [254  66 110  63]
+ [237 224  80 172]]
+After MixColumns:
+[[ 44 254  37 139]
+ [157   9  23 127]
+ [124  64   4 175]
+ [105 234  32 246]]
+After AddRoundKey:
+[[137  46 140  17]
+ [127 157 249 165]
+ [100  47  90 196]
+ [123 128 120 152]]
+
+Round 4:
+After SubBytes:
+[[167  49 100 130]
+ [210  94 153   6]
+ [ 67  21 190  28]
+ [ 33 205 188  70]]
+After ShiftRows:
+[[167  49 100 130]
+ [ 94 153   6 210]
+ [190  28  67  21]
+ [ 70  33 205 188]]
+After MixColumns:
+[[ 79 239  76 219]
+ [132  29  96 190]
+ [ 84 243 168 165]
+ [158 148 104  57]]
+After AddRoundKey:
+[[ 98 223   8 134]
+ [ 15   4 129 201]
+ [173  11  58  50]
+ [129  68  27 153]]
+
+Round 5:
+After SubBytes:
+[[170 158  48  68]
+ [118 242  12 221]
+ [149  43 128  35]
+ [ 12  27 175 238]]
+After ShiftRows:
+[[170 158  48  68]
+ [242  12 221 118]
+ [128  35 149  43]
+ [238  12  27 175]]
+After MixColumns:
+[[ 44  28 146 150]
+ [ 32 239  46 122]
+ [106 192 241 142]
+ [ 80 142  46 212]]
+After AddRoundKey:
+[[197  37   2 156]
+ [ 55 108  67 205]
+ [250  63  80  68]
+ [162  22 238 122]]
+
+Round 6:
+After SubBytes:
+[[166  63 119 222]
+ [154  80  26 189]
+ [ 45 117  83  27]
+ [ 58  71  40 218]]
+After ShiftRows:
+[[166  63 119 222]
+ [ 80  26 189 154]
+ [ 83  27  45 117]
+ [218  58  71  40]]
+After MixColumns:
+[[ 46 113  88  79]
+ [ 41  28  38  70]
+ [ 37  93  89 214]
+ [ 93  52 135 198]]
+After AddRoundKey:
+[[174 193 172 230]
+ [214 250  33  54]
+ [ 56 184  46  54]
+ [ 37 156  92 189]]
+
+Round 7:
+After SubBytes:
+[[228 120 145 142]
+ [246  45 253   5]
+ [  7 108  49   5]
+ [ 63 222  74 122]]
+After ShiftRows:
+[[228 120 145 142]
+ [ 45 253   5 246]
+ [ 49   5   7 108]
+ [122  63 222  74]]
+After MixColumns:
+[[239 214 239  32]
+ [151 169  76 135]
+ [ 37 206 227 126]
+ [223  14  13 135]]
+After AddRoundKey:
+[[213 213 124 185]
+ [209 108 228 152]
+ [ 84  64 204 155]
+ [ 12  69 134 162]]
+
+Round 8:
+After SubBytes:
+[[  3   3  16  86]
+ [ 62  80 105  70]
+ [ 32   9  75  20]
+ [254 110  68  58]]
+After ShiftRows:
+[[  3   3  16  86]
+ [ 80 105  70  62]
+ [ 75  20  32   9]
+ [ 58 254 110  68]]
+After MixColumns:
+[[135  87 164 163]
+ [ 68  19 146 117]
+ [139  91 164 182]
+ [106 159 138  69]]
+After AddRoundKey:
+[[207 175 168   6]
+ [ 98 211  85 194]
+ [169 156  20 230]
+ [252 161 111 219]]
+
+Round 9:
+After SubBytes:
+[[138 121 194 111]
+ [170 102 252  37]
+ [211 222 250 142]
+ [176  50 168 185]]
+After ShiftRows:
+[[138 121 194 111]
+ [102 252  37 170]
+ [250 142 211 222]
+ [185 176  50 168]]
+After MixColumns:
+[[230 211  17  77]
+ [234 163 212 241]
+ [211  73  12 129]
+ [112 130 207 142]]
+After AddRoundKey:
+[[218 236 189 120]
+ [  5 137  86 108]
+ [241 229 143 231]
+ [168  17 215 179]]
+
+Round 10:
+After SubBytes:
+[[ 87 206 122 188]
+ [107 167 177  80]
+ [161 217 115 148]
+ [194 130  14 109]]
+After ShiftRows:
+[[ 87 206 122 188]
+ [167 177  80 107]
+ [115 148 161 217]
+ [109 194 130  14]]
+After MixColumns:
+[[ 66  25  39   9]
+ [250 210 160  20]
+ [161  17 238 108]
+ [247 243  96 113]]
+After AddRoundKey:
+[[ 68 231 213  94]
+ [239   7 178 177]
+ [164 211 156  78]
+ [247 205 187  52]]
+
+Round 11:
+After SubBytes:
+[[ 27 148   3  88]
+ [223 197  55 200]
+ [ 73 102 222  47]
+ [104 189 234  24]]
+After ShiftRows:
+[[ 27 148   3  88]
+ [197  55 200 223]
+ [222  47  73 102]
+ [ 24 104 189 234]]
+After MixColumns:
+[[164  45 177  70]
+ [235 227 238 189]
+ [ 81  69 133 110]
+ [  6 111 229 158]]
+After AddRoundKey:
+[[195 117  69 135]
+ [  2  32 175  97]
+ [224  88  27 150]
+ [176  74 216 158]]
+
+Round 12:
+After SubBytes:
+[[ 46 157 110  23]
+ [119 183 121 239]
+ [225 106 175 144]
+ [231 214  97  11]]
+After ShiftRows:
+[[ 46 157 110  23]
+ [183 121 239 119]
+ [175 144 225 106]
+ [ 11 231 214  97]]
+After MixColumns:
+[[ 58 221 193 188]
+ [186  35  69  38]
+ [193 237  57  23]
+ [124 128  11 230]]
+After AddRoundKey:
+[[154 131 109  71]
+ [238 162 214  16]
+ [167  73 239 227]
+ [  4 198 150  62]]
+
+Round 13:
+After SubBytes:
+[[184 236  60 160]
+ [ 40  58 246 202]
+ [ 92  59 223  17]
+ [242 180 144 178]]
+After ShiftRows:
+[[184 236  60 160]
+ [ 58 246 202  40]
+ [223  17  92  59]
+ [178 242 180 144]]
+After MixColumns:
+[[ 72  33 213 136]
+ [  4 218 227  45]
+ [234  53 137  85]
+ [ 73  55 161 211]]
+After AddRoundKey:
+[[ 32  17  17 141]
+ [232 245 141 159]
+ [228  38   4  32]
+ [158 197 110  28]]
+
+Final Round:
+After SubBytes:
+[[183 130 130  93]
+ [155 230  93 219]
+ [105 247 242 183]
+ [ 11 166 159 156]]
+After ShiftRows:
+[[183 130 130  93]
+ [230  93 219 155]
+ [242 183 105 247]
+ [156  11 166 159]]
+Final encrypted state:
+[[ 96  11 167 131]
+ [ 47  21   0 118]
+ [ 30 255 247 157]
+ [143  94 110 143]]
+
+Encrypting state 2:
+Initial state:
+[[49 49 49 13]
+ [13 13 13 13]
+ [13 13 13 13]
+ [13 13 13 13]]
+After initial AddRoundKey:
+[[ 80  84  88  96]
+ [111 107 103  99]
+ [110 106 102  98]
+ [105 101  97 125]]
+
+Round 1:
+After SubBytes:
+[[ 83  32 106 208]
+ [168 127 133 251]
+ [159   2  51 170]
+ [249  77 239 255]]
+After ShiftRows:
+[[ 83  32 106 208]
+ [127 133 251 168]
+ [ 51 170 159   2]
+ [255 249  77 239]]
+After MixColumns:
+[[235 135  16 181]
+ [  7  45 112 114]
+ [ 80 250  99  86]
+ [ 92 166  64   4]]
+After AddRoundKey:
+[[154 242 105 134]
+ [117  91  10  70]
+ [ 35 141  82  99]
+ [ 40 222 114  50]]
+
+Round 2:
+After SubBytes:
+[[184 137 249  68]
+ [157  57 103  90]
+ [ 38  93   0 251]
+ [ 52  29  64  35]]
+After ShiftRows:
+[[184 137 249  68]
+ [ 57 103  90 157]
+ [  0 251  38  93]
+ [ 35  52  29  64]]
+After MixColumns:
+[[  3 111  60  41]
+ [233 101  58 194]
+ [228  95 200 163]
+ [172 116  86 140]]
+After AddRoundKey:
+[[123 114  72  48]
+ [ 29 247 194  84]
+ [130  94 162 166]
+ [ 11 187 245  95]]
+
+Round 3:
+After SubBytes:
+[[ 33  64  82   4]
+ [164 104  37  32]
+ [ 19  88  58  36]
+ [ 43 234 230 207]]
+After ShiftRows:
+[[ 33  64  82   4]
+ [104  37  32 164]
+ [ 58  36  19  88]
+ [207  43 234 230]]
+After MixColumns:
+[[ 15 224  61  65]
+ [112  77 205  89]
+ [119  80 113  33]
+ [180 151  10  39]]
+After AddRoundKey:
+[[170  48 148 219]
+ [146 217  35 131]
+ [111  63  47  74]
+ [166 253  82  73]]
+
+Round 4:
+After SubBytes:
+[[172   4  34 185]
+ [ 79  53  38 236]
+ [168 117  21 214]
+ [ 36  84   0  59]]
+After ShiftRows:
+[[172   4  34 185]
+ [ 53  38 236  79]
+ [ 21 214 168 117]
+ [ 59  36  84   0]]
+After MixColumns:
+[[ 50 144 151 205]
+ [194  13  86 184]
+ [254 249 121  28]
+ [185 180 138 234]]
+After AddRoundKey:
+[[ 31 160 211 144]
+ [ 73  20 183 207]
+ [  7   1 235 139]
+ [166 100 249  74]]
+
+Round 5:
+After SubBytes:
+[[192 224 102  96]
+ [ 59 250 169 138]
+ [197 124 233  61]
+ [ 36  67 153 214]]
+After ShiftRows:
+[[192 224 102  96]
+ [250 169 138  59]
+ [233  61 197 124]
+ [214  36  67 153]]
+After MixColumns:
+[[177  34 207 104]
+ [217 202 126  11]
+ [146  95 184  19]
+ [255 231  99 206]]
+After AddRoundKey:
+[[ 88  27  95  98]
+ [206  73  19 188]
+ [  2 160  25 217]
+ [ 13 127 163  96]]
+
+Round 6:
+After SubBytes:
+[[106 175 207 170]
+ [139  59 125 101]
+ [119 224 212  53]
+ [215 210  10 208]]
+After ShiftRows:
+[[106 175 207 170]
+ [ 59 125 101 139]
+ [212  53 119 224]
+ [208 215 210  10]]
+After MixColumns:
+[[157  32 143  35]
+ [171 221  78 150]
+ [137 218  41 228]
+ [234  23 231 154]]
+After AddRoundKey:
+[[ 29 144 123 138]
+ [ 84  59  73 230]
+ [148  63  94   4]
+ [146 191  60 225]]
+
+Round 7:
+After SubBytes:
+[[164  96  33 126]
+ [ 32 226  59 142]
+ [ 34 117  88 242]
+ [ 79   8 235 248]]
+After ShiftRows:
+[[164  96  33 126]
+ [226  59 142  32]
+ [ 88 242  34 117]
+ [248  79   8 235]]
+After MixColumns:
+[[206  48 225   2]
+ [107  84  72  74]
+ [229 117 243 146]
+ [166 247 223  26]]
+After AddRoundKey:
+[[244  51 114 155]
+ [ 45 145 224  85]
+ [148 251 220 119]
+ [117 188  84  63]]
+
+Round 8:
+After SubBytes:
+[[191 195  64  20]
+ [216 129 225 252]
+ [ 34  15 134 245]
+ [157 101  32 117]]
+After ShiftRows:
+[[191 195  64  20]
+ [129 225 252 216]
+ [134 245  34  15]
+ [117 157 101  32]]
+After MixColumns:
+[[ 14 205 216 116]
+ [ 66 131 160 142]
+ [182 111  87 178]
+ [ 55 107 212 171]]
+After AddRoundKey:
+[[ 70  53 212 209]
+ [100  67 103  57]
+ [148 168 231 226]
+ [161  85  49  53]]
+
+Round 9:
+After SubBytes:
+[[ 90 150  72  62]
+ [ 67  26 133  18]
+ [ 34 194 148 152]
+ [ 50 252 199 150]]
+After ShiftRows:
+[[ 90 150  72  62]
+ [ 26 133  18  67]
+ [148 152  34 194]
+ [150  50 252 199]]
+After MixColumns:
+[[152   9 120 188]
+ [ 95   6 246  34]
+ [210 110   1 176]
+ [ 87 216  11  86]]
+After AddRoundKey:
+[[164  54 212 137]
+ [176  44 116 191]
+ [240 194 130 214]
+ [143  75  19 107]]
+
+Round 10:
+After SubBytes:
+[[ 73   5  72 167]
+ [231 113 146   8]
+ [140  37  19 246]
+ [115 179 125 127]]
+After ShiftRows:
+[[ 73   5  72 167]
+ [113 146   8 231]
+ [ 19 246 140  37]
+ [127 115 179 125]]
+After MixColumns:
+[[109  34 183  63]
+ [225  72 100  96]
+ [159 245 141 141]
+ [ 71 141  33 202]]
+After AddRoundKey:
+[[107 220  69 104]
+ [244 157 118 197]
+ [154  55 255 175]
+ [ 71 179 250 143]]
+
+Round 11:
+After SubBytes:
+[[127 134 110  69]
+ [191  94  56 166]
+ [184 154  22 121]
+ [160 109  45 115]]
+After ShiftRows:
+[[127 134 110  69]
+ [ 94  56 166 191]
+ [ 22 121 184 154]
+ [115 160 109  45]]
+After MixColumns:
+[[121 134 248 231]
+ [138 221 135 184]
+ [152 183  20 162]
+ [ 47 139 118 176]]
+After AddRoundKey:
+[[ 30 222  12  38]
+ [ 99  30 198 100]
+ [ 41 170 138  90]
+ [153 174  75 176]]
+
+Round 12:
+After SubBytes:
+[[114  29 254 247]
+ [251 114 180  67]
+ [165 172 126 190]
+ [238 228 179 231]]
+After ShiftRows:
+[[114  29 254 247]
+ [114 180  67 251]
+ [126 190 165 172]
+ [231 238 228 179]]
+After MixColumns:
+[[235 173  99 252]
+ [243  89 104  70]
+ [206 231 219 129]
+ [ 79 234  44  40]]
+After AddRoundKey:
+[[ 75 243 207   7]
+ [167 216 251 112]
+ [168  67  13 117]
+ [ 55 172 177 240]]
+
+Round 13:
+After SubBytes:
+[[179  13 138 197]
+ [ 92  97  15  81]
+ [194  26 215 157]
+ [154 145 200 140]]
+After ShiftRows:
+[[179  13 138 197]
+ [ 97  15  81  92]
+ [215 157 194  26]
+ [140 154 145 200]]
+After MixColumns:
+[[133  12 175 167]
+ [159  53 228 155]
+ [232 150 236 238]
+ [123 170  47 153]]
+After AddRoundKey:
+[[237  60 107 162]
+ [115  26 138  41]
+ [230 133  97 155]
+ [172  88 224  86]]
+
+Final Round:
+After SubBytes:
+[[ 85 235 127  58]
+ [143 162 126 165]
+ [142 151 239  20]
+ [145 106 225 177]]
+After ShiftRows:
+[[ 85 235 127  58]
+ [162 126 165 143]
+ [239  20 142 151]
+ [177 145 106 225]]
+Final encrypted state:
+[[130  98  90 228]
+ [107  54 126  98]
+ [  3  92  16 253]
+ [162 196 162 241]]
+
+Step 5: Encrypted data
+Encrypted data: [ 96  47  30 143  11  21 255  94 167   0 247 110 131 118 157 143 130 107
+   3 162  98  54  92 196  90 126  16 162 228  98 253 241]
+
+Step 6: Creating decryption input states
+Number of decryption input states: 2
+
+Step 7: Decrypting state by state
+
+Decrypting state 1:
+Initial ciphertext state:
+[[ 96  47  30 143]
+ [ 11  21 255  94]
+ [167   0 247 110]
+ [131 118 157 143]]
+After initial AddRoundKey with round key 14:
+[[183 166  59  81]
+ [194  93  36 179]
+ [ 75  72 105   4]
+ [144  35  85 159]]
+
+Decryption Round 1:
+After InvShiftRows:
+[[183 166  59  81]
+ [179 194  93  36]
+ [105   4  75  72]
+ [ 35  85 159 144]]
+After InvSubBytes:
+[[ 32 197  73 112]
+ [ 75 168 141 166]
+ [228  48 204 212]
+ [ 50 237 110 150]]
+Original round key 13:
+[[104  48 196   5]
+ [236  47 110 178]
+ [ 14  19 141 117]
+ [215 242 207 207]]
+Transformed round key 13 (with InvMixColumns):
+[[123 205  93 206]
+ [ 92  65 232 173]
+ [167   9 223 164]
+ [221 123 130 202]]
+After AddRoundKey with original round key 13:
+[[ 72 245 141 117]
+ [167 135 227  20]
+ [234  35  65 161]
+ [229  31 161  89]]
+After AddRoundKey with transformed round key 13:
+[[ 91   8  20 190]
+ [ 23 233 101  11]
+ [ 67  57  19 112]
+ [239 150 236  92]]
+After InvMixColumns with original key:
+[[146 108 222 247]
+ [143 138  61 119]
+ [235  38  21  10]
+ [ 22 142 120  19]]
+After InvMixColumns with transformed key:
+[[  2  29 120 231]
+ [211 189   9 135]
+ [193 176 120   0]
+ [240  94 135 249]]
+Difference between states:
+[[ 144   79  102   16]
+ [ -68  -51   52  -16]
+ [  42 -138  -99   10]
+ [-218   48  -15 -230]]
+
+Decryption Round 2:
+After InvShiftRows:
+[[146 108 222 247]
+ [119 143 138  61]
+ [ 21  10 235  38]
+ [142 120  19  22]]
+After InvSubBytes:
+[[116 184 156  38]
+ [  2 115 207 139]
+ [ 47 163  60  35]
+ [230 193 130 255]]
+Original round key 12:
+[[160  94 172 251]
+ [ 84 129 147  54]
+ [102 164 214 244]
+ [120  70 157 216]]
+Transformed round key 12 (with InvMixColumns):
+[[157 240 216 238]
+ [123  52 216 148]
+ [148 112  74  56]
+ [152 137  62 163]]
+After AddRoundKey with original round key 12:
+[[212 230  48 221]
+ [ 86 242  92 189]
+ [ 73   7 234 215]
+ [158 135  31  39]]
+After AddRoundKey with transformed round key 12:
+[[233  72  68 200]
+ [121  71  23  31]
+ [187 211 118  27]
+ [126  72 188  92]]
+After InvMixColumns with original key:
+[[ 66  63 144  73]
+ [174 148   1  75]
+ [117 237  99 120]
+ [204 210 107 234]]
+After InvMixColumns with transformed key:
+[[ 74  84  23  96]
+ [ 49  16 114 124]
+ [178 252  12 136]
+ [156  44 240   4]]
+Difference between states:
+[[  -8  -21  121  -23]
+ [ 125  132 -113  -49]
+ [ -61  -15   87  -16]
+ [  48  166 -133  230]]
+
+Decryption Round 3:
+After InvShiftRows:
+[[ 66  63 144  73]
+ [ 75 174 148   1]
+ [ 99 120 117 237]
+ [210 107 234 204]]
+After InvSubBytes:
+[[246  37 150 164]
+ [204 190 231   9]
+ [  0 193  63  83]
+ [127   5 187  39]]
+Original round key 11:
+[[103  88 244 193]
+ [233 195  65 220]
+ [177  29 158 248]
+ [182  37  61   0]]
+Transformed round key 11 (with InvMixColumns):
+[[184 182 144 147]
+ [147  29 169  69]
+ [103 174 214 123]
+ [197 166 249  72]]
+After AddRoundKey with original round key 11:
+[[145 125  98 101]
+ [ 37 125 166 213]
+ [177 220 161 171]
+ [201  32 134  39]]
+After AddRoundKey with transformed round key 11:
+[[ 78 147   6  55]
+ [ 95 163  78  76]
+ [103 111 233  40]
+ [186 163  66 111]]
+After InvMixColumns with original key:
+[[148 146 106 204]
+ [125  22 146  11]
+ [ 55 208 116 122]
+ [ 18 168 111 129]]
+After InvMixColumns with transformed key:
+[[ 62 115 189 122]
+ [ 96 125 145 207]
+ [148 108 143  29]
+ [  6 158  64 148]]
+Difference between states:
+[[  86   31  -83   82]
+ [  29 -103    1 -196]
+ [ -93  100  -27   93]
+ [  12   10   47  -19]]
+
+Decryption Round 4:
+After InvShiftRows:
+[[148 146 106 204]
+ [ 11 125  22 146]
+ [116 122  55 208]
+ [168 111 129  18]]
+After InvSubBytes:
+[[231 116  88  39]
+ [158  19 255 116]
+ [202 189 178  96]
+ [111   6 145  57]]
+Original round key 10:
+[[  6 254 242  87]
+ [ 21 213  18 165]
+ [  5 194 114  34]
+ [  0  62 219  69]]
+Transformed round key 10 (with InvMixColumns):
+[[138 109  40  54]
+ [199  79 236  76]
+ [165 228  58 114]
+ [254  17 183 157]]
+After AddRoundKey with original round key 10:
+[[225 138 170 112]
+ [139 198 237 209]
+ [207 127 192  66]
+ [111  56  74 124]]
+After AddRoundKey with transformed round key 10:
+[[109  25 112  17]
+ [ 89  92  19  56]
+ [111  89 136  18]
+ [145  23  38 164]]
+After InvMixColumns with original key:
+[[ 77 184 104 234]
+ [126  41 226 101]
+ [236  91 131 253]
+ [ 21 193 196 237]]
+After InvMixColumns with transformed key:
+[[205 219 132  68]
+ [248  50  21  33]
+ [ 64 141 253  98]
+ [191 111 161 152]]
+Difference between states:
+[[-128  -35  -28  166]
+ [-122   -9  205   68]
+ [ 172  -50 -122  155]
+ [-170   82   35   85]]
+
+Decryption Round 5:
+After InvShiftRows:
+[[ 77 184 104 234]
+ [101 126  41 226]
+ [131 253 236  91]
+ [193 196 237  21]]
+After InvSubBytes:
+[[101 154 247 187]
+ [188 138  76  59]
+ [ 65  33 131  87]
+ [221 136  83  47]]
+Original round key 9:
+[[ 60  63 172  53]
+ [239  42 130 157]
+ [ 34 172 131 102]
+ [216 147  24  61]]
+Transformed round key 9 (with InvMixColumns):
+[[131  14  38   3]
+ [200 142 180 236]
+ [207 201 120 173]
+ [173  99  95 177]]
+After AddRoundKey with original round key 9:
+[[ 89 165  91 142]
+ [ 83 160 206 166]
+ [ 99 141   0  49]
+ [  5  27  75  18]]
+After AddRoundKey with transformed round key 9:
+[[230 148 209 184]
+ [116   4 248 215]
+ [142 232 251 250]
+ [112 235  12 158]]
+After InvMixColumns with original key:
+[[132 104 105  71]
+ [ 81  71  31  38]
+ [102 125 149 238]
+ [223 193  61 132]]
+After InvMixColumns with transformed key:
+[[ 67  35  95  38]
+ [170  49 119 225]
+ [243  98 210 114]
+ [118 227  36 190]]
+Difference between states:
+[[  65   69   10   33]
+ [ -89   22  -88 -187]
+ [-141   27  -61  124]
+ [ 105  -34   25  -58]]
+
+Decryption Round 6:
+After InvShiftRows:
+[[132 104 105  71]
+ [ 38  81  71  31]
+ [149 238 102 125]
+ [193  61 132 223]]
+After InvSubBytes:
+[[ 79 247 228  22]
+ [ 35 112  22 203]
+ [173 153 211  19]
+ [221 139  79 239]]
+Original round key 8:
+[[ 72 248  12 165]
+ [ 38 192 199 183]
+ [ 34 199 176  80]
+ [150  62 229 158]]
+Transformed round key 8 (with InvMixColumns):
+[[119 231  69  30]
+ [136 136 163 160]
+ [178  65 222  72]
+ [151 239 166  42]]
+After AddRoundKey with original round key 8:
+[[  7  15 232 179]
+ [  5 176 209 124]
+ [143  94  99  67]
+ [ 75 181 170 113]]
+After AddRoundKey with transformed round key 8:
+[[ 56  16 161   8]
+ [171 248 181 107]
+ [ 31 216  13  91]
+ [ 74 100 233 197]]
+After InvMixColumns with original key:
+[[185 247 177 143]
+ [133 161 104  98]
+ [166  14 193 158]
+ [ 92  12 232 142]]
+After InvMixColumns with transformed key:
+[[ 53  20  62 205]
+ [221  60 132 209]
+ [133 116 105 127]
+ [171   8  35 158]]
+Difference between states:
+[[ 132  227  115  -62]
+ [ -88  101  -28 -111]
+ [  33 -102   88   31]
+ [ -79    4  197  -16]]
+
+Decryption Round 7:
+After InvShiftRows:
+[[185 247 177 143]
+ [ 98 133 161 104]
+ [193 158 166  14]
+ [ 12 232 142  92]]
+After InvSubBytes:
+[[219  38  86 115]
+ [171 103 241 247]
+ [221 223 197 215]
+ [129 200 230 167]]
+Original round key 7:
+[[ 58   3 147 153]
+ [ 70 197 168  31]
+ [113 142  47 229]
+ [211  75 139  37]]
+Transformed round key 7 (with InvMixColumns):
+[[129 141  40  37]
+ [ 62  70  58  88]
+ [109   6 177 213]
+ [ 12 206  60 238]]
+After AddRoundKey with original round key 7:
+[[225  37 197 234]
+ [237 162  89 232]
+ [172  81 234  50]
+ [ 82 131 109 130]]
+After AddRoundKey with transformed round key 7:
+[[ 90 171 126  86]
+ [149  33 203 175]
+ [176 217 116   2]
+ [141   6 218  73]]
+After InvMixColumns with original key:
+[[245  48 153 246]
+ [134  16  55 161]
+ [ 71 238 128  81]
+ [198 155  53 180]]
+After InvMixColumns with transformed key:
+[[121 188 228 161]
+ [156 157  41  14]
+ [108 100 216 138]
+ [123  16  14 151]]
+Difference between states:
+[[ 124 -140  -75   85]
+ [ -22 -141   14  147]
+ [ -37  138  -88  -57]
+ [  75  139   39   29]]
+
+Decryption Round 8:
+After InvShiftRows:
+[[245  48 153 246]
+ [161 134  16  55]
+ [128  81  71 238]
+ [155  53 180 198]]
+After InvSubBytes:
+[[119   8 249 214]
+ [241 220 124 178]
+ [ 58 112  22 153]
+ [232 217 198 199]]
+Original round key 6:
+[[128 176 244 169]
+ [255 230   7 112]
+ [ 29 229 119 224]
+ [120 168 219 123]]
+Transformed round key 6 (with InvMixColumns):
+[[246 144 162  91]
+ [192   0  43   3]
+ [ 95 243 159 150]
+ [115 120  73 140]]
+After AddRoundKey with original round key 6:
+[[247 184  13 127]
+ [ 14  58 123 194]
+ [ 39 149  97 121]
+ [144 113  29 188]]
+After AddRoundKey with transformed round key 6:
+[[129 152  91 141]
+ [ 49 220  87 177]
+ [101 131 137  15]
+ [155 161 143  75]]
+After InvMixColumns with original key:
+[[123 104  16 147]
+ [ 26  51 150 217]
+ [ 55 137 104 101]
+ [ 24 180 228  87]]
+After InvMixColumns with transformed key:
+[[ 79   7 124  94]
+ [ 15 246 231 134]
+ [ 55 208 186  44]
+ [ 57  71  43 140]]
+Difference between states:
+[[  44   97 -108   53]
+ [  11 -195  -81   83]
+ [   0  -71  -82   57]
+ [ -33  109  185  -53]]
+
+Decryption Round 9:
+After InvShiftRows:
+[[123 104  16 147]
+ [217  26  51 150]
+ [104 101  55 137]
+ [180 228  87  24]]
+After InvSubBytes:
+[[  3 247 124  34]
+ [229  67 102  53]
+ [247 188 178 242]
+ [198 174 218  52]]
+Original round key 5:
+[[233  57 144  10]
+ [ 23 131 109 183]
+ [144 255 161 202]
+ [242 152 192 174]]
+Transformed round key 5 (with InvMixColumns):
+[[225  12 165  13]
+ [171 120 124  98]
+ [187 107 183 100]
+ [109 194 242 210]]
+After AddRoundKey with original round key 5:
+[[234 206 236  40]
+ [242 192  11 130]
+ [103  67  19  56]
+ [ 52  54  26 154]]
+After AddRoundKey with transformed round key 5:
+[[226 251 217  47]
+ [ 78  59  26  87]
+ [ 76 215   5 150]
+ [171 108  40 230]]
+After InvMixColumns with original key:
+[[253  94  55 111]
+ [211 166 160 197]
+ [230  37  15 111]
+ [131 166 118 205]]
+After InvMixColumns with transformed key:
+[[ 10  94 198  69]
+ [214  49  51 116]
+ [ 50 132 221 236]
+ [165 144 198 213]]
+Difference between states:
+[[ 243    0 -143   42]
+ [  -3  117  109   81]
+ [ 180  -95 -206 -125]
+ [ -34   22  -80   -8]]
+
+Decryption Round 10:
+After InvShiftRows:
+[[253  94  55 111]
+ [197 211 166 160]
+ [ 15 111 230  37]
+ [166 118 205 131]]
+After InvSubBytes:
+[[ 33 157 178   6]
+ [  7 169 197  71]
+ [251   6 245 194]
+ [197  15 128  65]]
+Original round key 4:
+[[ 45  48  68  93]
+ [139  25 225 119]
+ [249 248 146 151]
+ [ 31 208 115 160]]
+Transformed round key 4 (with InvMixColumns):
+[[113 102  50 249]
+ [127 192  43  40]
+ [ 37 172 108   9]
+ [107  11  49 197]]
+After AddRoundKey with original round key 4:
+[[ 12 173 246  91]
+ [140 176  36  48]
+ [  2 254 103  85]
+ [218 223 243 225]]
+After AddRoundKey with transformed round key 4:
+[[ 80 251 128 255]
+ [120 105 238 111]
+ [222 170 153 203]
+ [174   4 177 132]]
+After InvMixColumns with original key:
+[[129   7 123 200]
+ [102  76 147 238]
+ [ 63  44 102  99]
+ [128  91 200 154]]
+After InvMixColumns with transformed key:
+[[160  92 120 105]
+ [244 156  39 192]
+ [158 117 237 248]
+ [146 137 244 142]]
+Difference between states:
+[[ -31  -85    3   95]
+ [-142  -80  108   46]
+ [ -95  -73 -135 -149]
+ [ -18  -46  -44   12]]
+
+Decryption Round 11:
+After InvShiftRows:
+[[129   7 123 200]
+ [238 102  76 147]
+ [102  99  63  44]
+ [ 91 200 154 128]]
+After InvSubBytes:
+[[145  56   3 177]
+ [153 211  93  34]
+ [211   0  37  66]
+ [ 87 177  55  58]]
+Original round key 3:
+[[165 208 169 154]
+ [226 148 238 218]
+ [ 24 111  94 107]
+ [ 18 106  88 110]]
+Transformed round key 3 (with InvMixColumns):
+[[250 237 169 168]
+ [243 211   4  30]
+ [221 208 220 211]
+ [153 175  48  32]]
+After AddRoundKey with original round key 3:
+[[ 52 232 170  43]
+ [123  71 179 248]
+ [203 111 123  41]
+ [ 69 219 111  84]]
+After AddRoundKey with transformed round key 3:
+[[107 213 170  25]
+ [106   0  89  60]
+ [ 14 208 249 145]
+ [206  30   7  26]]
+After InvMixColumns with original key:
+[[232  68 148  55]
+ [107 146   0 110]
+ [142 245  95 114]
+ [204  56 198 133]]
+After InvMixColumns with transformed key:
+[[117 179 101 236]
+ [151   0   4  76]
+ [137 128  44  35]
+ [170  40  64  45]]
+Difference between states:
+[[ 115 -111   47 -181]
+ [ -44  146   -4   34]
+ [   5  117   51   79]
+ [  34   16  134   88]]
+
+Decryption Round 12:
+After InvShiftRows:
+[[232  68 148  55]
+ [110 107 146   0]
+ [ 95 114 142 245]
+ [ 56 198 133 204]]
+After InvSubBytes:
+[[200 134 231 178]
+ [ 69   5 116  82]
+ [132  30 230 119]
+ [118 199 103  39]]
+Original round key 2:
+[[120  29 116  25]
+ [244 146 248 150]
+ [102   1 106   5]
+ [167 207 163 211]]
+Transformed round key 2 (with InvMixColumns):
+[[ 16  23  84 203]
+ [143 191 235   3]
+ [148 137 192 101]
+ [ 70  96  58 244]]
+After AddRoundKey with original round key 2:
+[[176 155 147 171]
+ [177 151 140 196]
+ [226  31 140 114]
+ [209   8 196 244]]
+After AddRoundKey with transformed round key 2:
+[[216 145 179 121]
+ [202 186 159  81]
+ [ 16 151  38  18]
+ [ 48 167  93 211]]
+After InvMixColumns with original key:
+[[ 88 102   8 220]
+ [ 53  21 110 147]
+ [110 212 185 204]
+ [ 49 188 136 106]]
+After InvMixColumns with transformed key:
+[[ 72  28  80 126]
+ [ 25  87  10   9]
+ [228  44 107 220]
+ [135 124 102  66]]
+Difference between states:
+[[  16   74  -72   94]
+ [  28  -66  100  138]
+ [-118  168   78  -16]
+ [ -86   64   34   40]]
+
+Decryption Round 13:
+After InvShiftRows:
+[[ 88 102   8 220]
+ [147  53  21 110]
+ [185 204 110 212]
+ [188 136 106  49]]
+After InvSubBytes:
+[[ 94 211 191 147]
+ [ 34 217  47  69]
+ [219  39  69  25]
+ [120 151  88  46]]
+Original round key 1:
+[[113 117 121  51]
+ [114 118 122  52]
+ [115 119  49  53]
+ [116 120  50  54]]
+Transformed round key 1 (with InvMixColumns):
+[[ 91  23  68   1]
+ [ 76  32 215  26]
+ [ 81  13  12  15]
+ [ 66  54 159  16]]
+After AddRoundKey with original round key 1:
+[[ 47 166 198 160]
+ [ 80 175  85 113]
+ [168  80 116  44]
+ [ 12 239 106  24]]
+After AddRoundKey with transformed round key 1:
+[[  5 196 251 146]
+ [110 249 248  95]
+ [138  42  73  22]
+ [ 58 161 199  62]]
+After InvMixColumns with original key:
+[[162  48 140 147]
+ [137  32  98 248]
+ [136 177  63 206]
+ [120  23  92  64]]
+After InvMixColumns with transformed key:
+[[128  90 138 185]
+ [175  78 244 222]
+ [162 195  57 236]
+ [ 86  97 202 110]]
+Difference between states:
+[[  34  -42    2  -38]
+ [ -38  -46 -146   26]
+ [ -26  -18    6  -30]
+ [  34  -74 -110  -46]]
+
+Final Decryption Round:
+After InvShiftRows:
+[[162  48 140 147]
+ [248 137  32  98]
+ [ 63 206 136 177]
+ [ 23  92  64 120]]
+After InvSubBytes:
+[[ 26   8 240  34]
+ [225 242  84 171]
+ [ 37 236 151  86]
+ [135 167 114 193]]
+Final decrypted state:
+[[123 109 153  79]
+ [131 148  62 197]
+ [ 70 139 252  57]
+ [227 207  30 177]]
+
+Decrypting state 2:
+Initial ciphertext state:
+[[130 107   3 162]
+ [ 98  54  92 196]
+ [ 90 126  16 162]
+ [228  98 253 241]]
+After initial AddRoundKey with round key 14:
+[[ 85 226  38 124]
+ [171 126 135  41]
+ [182  54 142 200]
+ [247  55  53 225]]
+
+Decryption Round 1:
+After InvShiftRows:
+[[ 85 226  38 124]
+ [ 41 171 126 135]
+ [142 200 182  54]
+ [ 55  53 225 247]]
+After InvSubBytes:
+[[237  59  35   1]
+ [ 76  14 138 234]
+ [230 177 121  36]
+ [178 217 224  38]]
+Original round key 13:
+[[104  48 196   5]
+ [236  47 110 178]
+ [ 14  19 141 117]
+ [215 242 207 207]]
+Transformed round key 13 (with InvMixColumns):
+[[123 205  93 206]
+ [ 92  65 232 173]
+ [167   9 223 164]
+ [221 123 130 202]]
+After AddRoundKey with original round key 13:
+[[133  11 231   4]
+ [160  33 228  88]
+ [232 162 244  81]
+ [101  43  47 233]]
+After AddRoundKey with transformed round key 13:
+[[150 246 126 207]
+ [ 16  79  98  71]
+ [ 65 184 166 128]
+ [111 162  98 236]]
+After InvMixColumns with original key:
+[[255   1 239 118]
+ [150 216 135  61]
+ [217 245  87 240]
+ [ 24 143 231  95]]
+After InvMixColumns with transformed key:
+[[111 112  73 102]
+ [202 239 179 205]
+ [243  99  58 250]
+ [254  95  24 181]]
+Difference between states:
+[[ 144 -111  166   16]
+ [ -52  -23  -44 -144]
+ [ -26  146   29  -10]
+ [-230   48  207  -86]]
+
+Decryption Round 2:
+After InvShiftRows:
+[[255   1 239 118]
+ [ 61 150 216 135]
+ [ 87 240 217 245]
+ [143 231  95  24]]
+After InvSubBytes:
+[[125   9  97  15]
+ [139  53  45 234]
+ [218  23 229 119]
+ [115 176 132  52]]
+Original round key 12:
+[[160  94 172 251]
+ [ 84 129 147  54]
+ [102 164 214 244]
+ [120  70 157 216]]
+Transformed round key 12 (with InvMixColumns):
+[[157 240 216 238]
+ [123  52 216 148]
+ [148 112  74  56]
+ [152 137  62 163]]
+After AddRoundKey with original round key 12:
+[[221  87 205 244]
+ [223 180 190 220]
+ [188 179  51 131]
+ [ 11 246  25 236]]
+After AddRoundKey with transformed round key 12:
+[[224 249 185 225]
+ [240   1 245 126]
+ [ 78 103 175  79]
+ [235  57 186 151]]
+After InvMixColumns with original key:
+[[ 44 214  89  42]
+ [ 14  72 178 235]
+ [ 60 101  21 211]
+ [171  93 167  85]]
+After InvMixColumns with transformed key:
+[[ 36 189 222   3]
+ [145 204 193 220]
+ [251 116 122  35]
+ [251 163  60 187]]
+Difference between states:
+[[   8   25 -133   39]
+ [-131 -132  -15   15]
+ [-191  -15 -101  176]
+ [ -80  -70  107 -102]]
+
+Decryption Round 3:
+After InvShiftRows:
+[[ 44 214  89  42]
+ [235  14  72 178]
+ [ 21 211  60 101]
+ [ 93 167  85 171]]
+After InvSubBytes:
+[[ 66  74  21 149]
+ [ 60 215 212  62]
+ [ 47 169 109 188]
+ [141 137 237  14]]
+Original round key 11:
+[[103  88 244 193]
+ [233 195  65 220]
+ [177  29 158 248]
+ [182  37  61   0]]
+Transformed round key 11 (with InvMixColumns):
+[[184 182 144 147]
+ [147  29 169  69]
+ [103 174 214 123]
+ [197 166 249  72]]
+After AddRoundKey with original round key 11:
+[[ 37  18 225  84]
+ [213  20 149 226]
+ [158 180 243  68]
+ [ 59 172 208  14]]
+After AddRoundKey with transformed round key 11:
+[[250 252 133   6]
+ [175 202 125 123]
+ [ 72   7 187 199]
+ [ 72  47  20  70]]
+After InvMixColumns with original key:
+[[207  94 152  62]
+ [ 29 119 143 117]
+ [222 196  36 205]
+ [ 89 243 100 122]]
+After InvMixColumns with transformed key:
+[[101 191  79 136]
+ [  0  28 140 177]
+ [125 120 223 170]
+ [ 77 197  75 111]]
+Difference between states:
+[[ 106  -97   73  -74]
+ [  29   91    3  -60]
+ [  97   76 -187   35]
+ [  12   46   25   11]]
+
+Decryption Round 4:
+After InvShiftRows:
+[[207  94 152  62]
+ [117  29 119 143]
+ [ 36 205 222 196]
+ [243 100 122  89]]
+After InvSubBytes:
+[[ 95 157 226 209]
+ [ 63 222   2 115]
+ [166 128 156 136]
+ [126 140 189  21]]
+Original round key 10:
+[[  6 254 242  87]
+ [ 21 213  18 165]
+ [  5 194 114  34]
+ [  0  62 219  69]]
+Transformed round key 10 (with InvMixColumns):
+[[138 109  40  54]
+ [199  79 236  76]
+ [165 228  58 114]
+ [254  17 183 157]]
+After AddRoundKey with original round key 10:
+[[ 89  99  16 134]
+ [ 42  11  16 214]
+ [163  66 238 170]
+ [126 178 102  80]]
+After AddRoundKey with transformed round key 10:
+[[213 240 202 231]
+ [248 145 238  63]
+ [  3 100 166 250]
+ [128 157  10 136]]
+After InvMixColumns with original key:
+[[211   3  97  27]
+ [193 127 144 141]
+ [110   9 148 120]
+ [210 237 237  68]]
+After InvMixColumns with transformed key:
+[[ 83  96 141 181]
+ [ 71 100 103 201]
+ [194 223 234 231]
+ [120  67 136  49]]
+Difference between states:
+[[ 128  -93  -44 -154]
+ [ 122   27   41  -60]
+ [ -84 -214  -86 -111]
+ [  90  170  101   19]]
+
+Decryption Round 5:
+After InvShiftRows:
+[[211   3  97  27]
+ [141 193 127 144]
+ [148 120 110   9]
+ [237 237  68 210]]
+After InvSubBytes:
+[[169 213 216  68]
+ [180 221 107 150]
+ [231 193  69  64]
+ [ 83  83 134 127]]
+Original round key 9:
+[[ 60  63 172  53]
+ [239  42 130 157]
+ [ 34 172 131 102]
+ [216 147  24  61]]
+Transformed round key 9 (with InvMixColumns):
+[[131  14  38   3]
+ [200 142 180 236]
+ [207 201 120 173]
+ [173  99  95 177]]
+After AddRoundKey with original round key 9:
+[[149 234 116 113]
+ [ 91 247 233  11]
+ [197 109 198  38]
+ [139 192 158  66]]
+After AddRoundKey with transformed round key 9:
+[[ 42 219 254  71]
+ [124  83 223 122]
+ [ 40   8  61 237]
+ [254  48 217 206]]
+After InvMixColumns with original key:
+[[165 189  28  44]
+ [253  67 199 128]
+ [238  65  63  71]
+ [ 54  15  33 245]]
+After InvMixColumns with transformed key:
+[[ 98 246  42  77]
+ [  6  53 175  71]
+ [123  94 120 219]
+ [159  45  56 207]]
+Difference between states:
+[[  67  -57  -14  -33]
+ [ 247   14   24   57]
+ [ 115  -29  -57 -148]
+ [-105  -30  -23   38]]
+
+Decryption Round 6:
+After InvShiftRows:
+[[165 189  28  44]
+ [128 253  67 199]
+ [ 63  71 238  65]
+ [ 15  33 245  54]]
+After InvSubBytes:
+[[ 41 205 196  66]
+ [ 58  33 100  49]
+ [ 37  22 153 248]
+ [251 123 119  36]]
+Original round key 8:
+[[ 72 248  12 165]
+ [ 38 192 199 183]
+ [ 34 199 176  80]
+ [150  62 229 158]]
+Transformed round key 8 (with InvMixColumns):
+[[119 231  69  30]
+ [136 136 163 160]
+ [178  65 222  72]
+ [151 239 166  42]]
+After AddRoundKey with original round key 8:
+[[ 97  53 200 231]
+ [ 28 225 163 134]
+ [  7 209  41 168]
+ [109  69 146 186]]
+After AddRoundKey with transformed round key 8:
+[[ 94  42 129  92]
+ [178 169 199 145]
+ [151  87  71 176]
+ [108 148 209  14]]
+After InvMixColumns with original key:
+[[183  77 189 196]
+ [ 90  81  98 236]
+ [255  41 231 109]
+ [  5 117 232  54]]
+After InvMixColumns with transformed key:
+[[ 59 174  50 134]
+ [  2 204 142  95]
+ [220  83  79 140]
+ [242 113  35  38]]
+Difference between states:
+[[ 124  -97  139   62]
+ [  88 -123  -44  141]
+ [  35  -42  152  -31]
+ [-237    4  197   16]]
+
+Decryption Round 7:
+After InvShiftRows:
+[[183  77 189 196]
+ [236  90  81  98]
+ [231 109 255  41]
+ [117 232  54   5]]
+After InvSubBytes:
+[[ 32 101 205 136]
+ [131  70 112 171]
+ [176 179 125  76]
+ [ 63 200  36  54]]
+Original round key 7:
+[[ 58   3 147 153]
+ [ 70 197 168  31]
+ [113 142  47 229]
+ [211  75 139  37]]
+Transformed round key 7 (with InvMixColumns):
+[[129 141  40  37]
+ [ 62  70  58  88]
+ [109   6 177 213]
+ [ 12 206  60 238]]
+After AddRoundKey with original round key 7:
+[[ 26 102  94  17]
+ [197 131 216 180]
+ [193  61  82 169]
+ [236 131 175  19]]
+After AddRoundKey with transformed round key 7:
+[[161 232 229 173]
+ [189   0  74 243]
+ [221 181 204 153]
+ [ 51   6  24 216]]
+After InvMixColumns with original key:
+[[221 117 247 113]
+ [ 74  81 158 195]
+ [249 152  13 247]
+ [156 231  31  90]]
+After InvMixColumns with transformed key:
+[[ 81 249 138  38]
+ [ 80 220 128 108]
+ [210  18  85  44]
+ [ 33 108  36 121]]
+Difference between states:
+[[ 140 -132  109   75]
+ [  -6 -139   30   87]
+ [  39  134  -72  203]
+ [ 123  123   -5  -31]]
+
+Decryption Round 8:
+After InvShiftRows:
+[[221 117 247 113]
+ [195  74  81 158]
+ [ 13 247 249 152]
+ [231  31  90 156]]
+After InvSubBytes:
+[[201  63  38  44]
+ [ 51  92 112 223]
+ [243  38 105 226]
+ [176 203  70  28]]
+Original round key 6:
+[[128 176 244 169]
+ [255 230   7 112]
+ [ 29 229 119 224]
+ [120 168 219 123]]
+Transformed round key 6 (with InvMixColumns):
+[[246 144 162  91]
+ [192   0  43   3]
+ [ 95 243 159 150]
+ [115 120  73 140]]
+After AddRoundKey with original round key 6:
+[[ 73 143 210 133]
+ [204 186 119 175]
+ [238 195  30   2]
+ [200  99 157 103]]
+After AddRoundKey with transformed round key 6:
+[[ 63 175 132 119]
+ [243  92  91 220]
+ [172 213 246 116]
+ [195 179  15 144]]
+After InvMixColumns with original key:
+[[ 62 159 147 250]
+ [ 84  80  45 226]
+ [196 226  19 227]
+ [ 13 184 139 180]]
+After InvMixColumns with transformed key:
+[[ 10 240 255  55]
+ [ 65 149  92 189]
+ [196 187 193 170]
+ [ 44  75  68 111]]
+Difference between states:
+[[  52  -81 -108  195]
+ [  19  -69  -47   37]
+ [   0   39 -174   57]
+ [ -31  109   71   69]]
+
+Decryption Round 9:
+After InvShiftRows:
+[[ 62 159 147 250]
+ [226  84  80  45]
+ [ 19 227 196 226]
+ [184 139 180  13]]
+After InvSubBytes:
+[[209 110  34  20]
+ [ 59 253 108 250]
+ [130  77 136  59]
+ [154 206 198 243]]
+Original round key 5:
+[[233  57 144  10]
+ [ 23 131 109 183]
+ [144 255 161 202]
+ [242 152 192 174]]
+Transformed round key 5 (with InvMixColumns):
+[[225  12 165  13]
+ [171 120 124  98]
+ [187 107 183 100]
+ [109 194 242 210]]
+After AddRoundKey with original round key 5:
+[[ 56  87 178  30]
+ [ 44 126   1  77]
+ [ 18 178  41 241]
+ [104  86   6  93]]
+After AddRoundKey with transformed round key 5:
+[[ 48  98 135  25]
+ [144 133  16 152]
+ [ 57  38  63  95]
+ [247  12  52  33]]
+After InvMixColumns with original key:
+[[139  67 133 111]
+ [104 162  93  40]
+ [125  39  61 101]
+ [240  11 121 221]]
+After InvMixColumns with transformed key:
+[[124  67 116  69]
+ [109  53 206 153]
+ [169 134 239 230]
+ [214  61 201 197]]
+Difference between states:
+[[  15    0   17   42]
+ [  -5  109 -113 -113]
+ [ -44  -95 -178 -129]
+ [  26  -50  -80   24]]
+
+Decryption Round 10:
+After InvShiftRows:
+[[139  67 133 111]
+ [ 40 104 162  93]
+ [ 61 101 125  39]
+ [ 11 121 221 240]]
+After InvSubBytes:
+[[206 100 103   6]
+ [238 247  26 141]
+ [139 188  19  61]
+ [158 175 201  23]]
+Original round key 4:
+[[ 45  48  68  93]
+ [139  25 225 119]
+ [249 248 146 151]
+ [ 31 208 115 160]]
+Transformed round key 4 (with InvMixColumns):
+[[113 102  50 249]
+ [127 192  43  40]
+ [ 37 172 108   9]
+ [107  11  49 197]]
+After AddRoundKey with original round key 4:
+[[227  84  35  91]
+ [101 238 251 250]
+ [114  68 129 170]
+ [129 127 186 183]]
+After AddRoundKey with transformed round key 4:
+[[191   2  85 255]
+ [145  55  49 165]
+ [174  16 127  52]
+ [245 164 248 210]]
+After InvMixColumns with original key:
+[[118 158 140 192]
+ [  6  54 170  94]
+ [ 13 151 243  82]
+ [  8 190  54 112]]
+After InvMixColumns with transformed key:
+[[ 87 197 143  97]
+ [148 230  30 112]
+ [172 206 120 201]
+ [ 26 108  10 100]]
+Difference between states:
+[[  31  -39   -3   95]
+ [-142 -176  140  -18]
+ [-159  -55  123 -119]
+ [ -18   82   44   12]]
+
+Decryption Round 11:
+After InvShiftRows:
+[[118 158 140 192]
+ [ 94   6  54 170]
+ [243  82  13 151]
+ [190  54 112   8]]
+After InvSubBytes:
+[[ 15 223 240  31]
+ [157 165  36  98]
+ [126  72 243 133]
+ [ 90  36 208 191]]
+Original round key 3:
+[[165 208 169 154]
+ [226 148 238 218]
+ [ 24 111  94 107]
+ [ 18 106  88 110]]
+Transformed round key 3 (with InvMixColumns):
+[[250 237 169 168]
+ [243 211   4  30]
+ [221 208 220 211]
+ [153 175  48  32]]
+After AddRoundKey with original round key 3:
+[[170  15  89 133]
+ [127  49 202 184]
+ [102  39 173 238]
+ [ 72  78 136 209]]
+After AddRoundKey with transformed round key 3:
+[[245  50  89 183]
+ [110 118  32 124]
+ [163 152  47  86]
+ [195 139 224 159]]
+After InvMixColumns with original key:
+[[100  10 232  90]
+ [243  35 102 185]
+ [ 69 140 107  53]
+ [ 41 242  83 212]]
+After InvMixColumns with transformed key:
+[[249 253  25 129]
+ [ 15 177  98 155]
+ [ 66 249  24 100]
+ [ 79 226 213 124]]
+Difference between states:
+[[-149 -243  207  -39]
+ [ 228 -142    4   30]
+ [   3 -109   83  -47]
+ [ -38   16 -130   88]]
+
+Decryption Round 12:
+After InvShiftRows:
+[[100  10 232  90]
+ [185 243  35 102]
+ [107  53  69 140]
+ [242  83 212  41]]
+After InvSubBytes:
+[[140 163 200  70]
+ [219 126  50 211]
+ [  5 217 104 240]
+ [  4  80  25  76]]
+Original round key 2:
+[[120  29 116  25]
+ [244 146 248 150]
+ [102   1 106   5]
+ [167 207 163 211]]
+Transformed round key 2 (with InvMixColumns):
+[[ 16  23  84 203]
+ [143 191 235   3]
+ [148 137 192 101]
+ [ 70  96  58 244]]
+After AddRoundKey with original round key 2:
+[[244 190 188  95]
+ [ 47 236 202  69]
+ [ 99 216   2 245]
+ [163 159 186 159]]
+After AddRoundKey with transformed round key 2:
+[[156 180 156 141]
+ [ 84 193 217 208]
+ [145  80 168 149]
+ [ 66  48  35 184]]
+After InvMixColumns with original key:
+[[240  36 122  40]
+ [114 238 126 166]
+ [ 81 104  67  98]
+ [200 183 137 156]]
+After InvMixColumns with transformed key:
+[[224  94  34 138]
+ [ 94 172  26  60]
+ [219 144 145 114]
+ [126 119 103 180]]
+Difference between states:
+[[  16  -58   88  -98]
+ [  20   66  100  106]
+ [-138  -40  -78  -16]
+ [  74   64   34  -24]]
+
+Decryption Round 13:
+After InvShiftRows:
+[[240  36 122  40]
+ [166 114 238 126]
+ [ 67  98  81 104]
+ [183 137 156 200]]
+After InvSubBytes:
+[[ 23 166 189 238]
+ [197  30 153 138]
+ [100 171 112 247]
+ [ 32 242  28 177]]
+Original round key 1:
+[[113 117 121  51]
+ [114 118 122  52]
+ [115 119  49  53]
+ [116 120  50  54]]
+Transformed round key 1 (with InvMixColumns):
+[[ 91  23  68   1]
+ [ 76  32 215  26]
+ [ 81  13  12  15]
+ [ 66  54 159  16]]
+After AddRoundKey with original round key 1:
+[[102 211 196 221]
+ [183 104 227 190]
+ [ 23 220  65 194]
+ [ 84 138  46 135]]
+After AddRoundKey with transformed round key 1:
+[[ 76 177 249 239]
+ [137  62  78 144]
+ [ 53 166 124 248]
+ [ 98 196 131 161]]
+After InvMixColumns with original key:
+[[110  70 150 106]
+ [ 35 122 155 175]
+ [ 32 136 131  57]
+ [255  89 198 218]]
+After InvMixColumns with transformed key:
+[[ 76  44 144  64]
+ [  5  20  13 137]
+ [ 10 250 133  27]
+ [209  47  80 244]]
+Difference between states:
+[[  34   26    6   42]
+ [  30  102  142   38]
+ [  22 -114   -2   30]
+ [  46   42  118  -26]]
+
+Final Decryption Round:
+After InvShiftRows:
+[[110  70 150 106]
+ [175  35 122 155]
+ [131  57  32 136]
+ [ 89 198 218 255]]
+After InvSubBytes:
+[[ 69 152  53  88]
+ [ 27  50 189 232]
+ [ 65  91  84 151]
+ [ 21 199 122 125]]
+Final decrypted state:
+[[ 36 253  92  53]
+ [121  84 215 134]
+ [ 34  60  63 248]
+ [113 175  22  13]]
+
+Step 8: Decrypted data before padding removal
+Decrypted data with padding: [123 131  70 227 109 148 139 207 153  62 252  30  79 197  57 177  36 121
+  34 113 253  84  60 175  92 215  63  22  53 134 248  13]
+Decrypted data after padding removal: [123 131  70 227 109 148 139 207 153  62 252  30  79 197  57 177  36 121
+  34 113 253  84  60 175  92 215  63  22  53 134 248  13]

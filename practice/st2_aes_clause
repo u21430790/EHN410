@@ -1,0 +1,192 @@
+def hex_to_matrix(hex_string):
+    """Convert a 16-bit hex string to a 2x2 matrix with 4-bit elements."""
+    # Ensure the hex string is 4 characters (16 bits)
+    if len(hex_string) != 4:
+        raise ValueError("Input hex string must be 4 characters (16 bits)")
+    
+    # Create a 2x2 matrix
+    matrix = [[0, 0], [0, 0]]
+    matrix[0][0] = int(hex_string[0], 16)
+    matrix[0][1] = int(hex_string[1], 16)
+    matrix[1][0] = int(hex_string[2], 16)
+    matrix[1][1] = int(hex_string[3], 16)
+    
+    return matrix
+
+def matrix_to_hex(matrix):
+    """Convert a 2x2 matrix with 4-bit elements to a 16-bit hex string."""
+    hex_string = ""
+    for i in range(2):
+        for j in range(2):
+            hex_string += format(matrix[i][j], 'X')
+    
+    return hex_string
+
+def generate_round_keys(key):
+    """Generate round keys by applying incremental circular 1-bit left shift."""
+    # Convert the hex key to a matrix
+    key_matrix = hex_to_matrix(key)
+    
+    # Generate round keys for 3 rounds
+    round_keys = [key_matrix]
+    
+    for r in range(3):
+        # Create a new matrix for the next round key
+        new_key = [[0, 0], [0, 0]]
+        
+        # Apply incremental circular 1-bit left shift to each element
+        for i in range(2):
+            for j in range(2):
+                # Get the current element value
+                value = round_keys[-1][i][j]
+                
+                # Apply circular left shift (4-bit values)
+                shifted = ((value << 1) & 0xF) | ((value >> 3) & 0x1)
+                
+                # Store the shifted value
+                new_key[i][j] = shifted
+        
+        round_keys.append(new_key)
+    
+    return round_keys
+
+def add_round_key(state, round_key):
+    """XOR the state matrix with the round key."""
+    result = [[0, 0], [0, 0]]
+    
+    for i in range(2):
+        for j in range(2):
+            result[i][j] = state[i][j] ^ round_key[i][j]
+    
+    return result
+
+def sub_bytes(state, sbox):
+    """Substitute each element using the S-box."""
+    result = [[0, 0], [0, 0]]
+    
+    for i in range(2):
+        for j in range(2):
+            # Get the row and column indices for the S-box lookup
+            row = (state[i][j] >> 2) & 0x3  # First 2 bits for row index
+            col = state[i][j] & 0x3         # Last 2 bits for column index
+            
+            # Substitute the value
+            result[i][j] = int(sbox[row][col], 16)
+    
+    return result
+
+def swap_rows(state):
+    """Swap the two rows in the state matrix."""
+    state[0], state[1] = state[1], state[0]
+    return state
+
+def swap_cols(state):
+    """Swap the two columns in the state matrix."""
+    for i in range(2):
+        state[i][0], state[i][1] = state[i][1], state[i][0]
+    return state
+
+def encrypt(plaintext, key, sbox):
+    """Encrypt a plaintext using the modified AES."""
+    # Generate round keys
+    round_keys = generate_round_keys(key)
+    
+    # Convert plaintext to matrix
+    state = hex_to_matrix(plaintext)
+    
+    # Initial add round key
+    state = add_round_key(state, round_keys[0])
+    
+    #print(f"Round key added")
+    #print(matrix_to_hex(state))
+    # 3 encryption rounds
+    for r in range(3):
+        # Sub Bytes
+        state = sub_bytes(state, sbox)
+
+        # Swap Rows
+        state = swap_rows(state)
+        
+        # Swap Columns
+        state = swap_cols(state)
+        
+        # Add Round Key
+        state = add_round_key(state, round_keys[r+1])
+    
+    # Convert the result back to hex
+    ciphertext = matrix_to_hex(state)
+    
+    return ciphertext
+
+def decrypt(ciphertext, key, inverse_sbox):
+    """Decrypt a ciphertext using the modified AES."""
+    # Generate round keys
+    round_keys = generate_round_keys(key)
+    
+    # Convert ciphertext to matrix
+    state = hex_to_matrix(ciphertext)
+    
+    # Initial add round key (using the last round key)
+    state = add_round_key(state, round_keys[3])
+    
+    # 3 decryption rounds (reverse of encryption)
+    for r in range(3):
+        # Swap Columns (inverse of encryption)
+        state = swap_cols(state)
+        
+        # Swap Rows (inverse of encryption)
+        state = swap_rows(state)
+        
+        # Inverse Sub Bytes
+        state = sub_bytes(state, inverse_sbox)
+        
+        # Add Round Key (using the keys in reverse order)
+        state = add_round_key(state, round_keys[2-r])
+    
+    # Convert the result back to hex
+    plaintext = matrix_to_hex(state)
+    
+    return plaintext
+
+# Define the S-box and inverse S-box
+sbox2 = [
+    ['B', 'C', 'A', '8'],
+    ['D', '2', '6', 'F'],
+    ['3', 'E', '0', '4'],
+    ['5', '9', '7', '1']
+]
+
+isbox2 = [
+    ['A', 'F', '5', '8'],
+    ['B', 'C', '6', 'E'],
+    ['3', 'D', '2', '0'],
+    ['1', '4', '9', '7']
+]
+
+# Main solution for the problem
+def main():
+    key = "D93B"
+    
+    # 2.1 Determine Sub keys
+    round_keys = generate_round_keys(key)
+    round_keys = round_keys[1:]
+    print("Round Keys:")
+    for i, key_matrix in enumerate(round_keys):
+        print(f"K{i} = {matrix_to_hex(key_matrix)}")
+    
+    # 2.2 Encrypt the plaintext P22 = 'C7AF'
+    plaintext = "C7AF"
+    ciphertext = encrypt(plaintext, key, sbox2)
+    print(f"\nEncryption:")
+    print(f"Plaintext: {plaintext}")
+    print(f"Ciphertext: {ciphertext}")
+    
+    # 2.3 Decrypt ciphertext C23 = '287F'
+    ciphertext = "287F"
+    decrypted = decrypt(ciphertext, key, isbox2)
+    print(f"\nDecryption:")
+    print(f"Ciphertext: {ciphertext}")
+    print(f"Decrypted: {decrypted}")
+
+if __name__ == "__main__":
+    main()
