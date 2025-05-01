@@ -1,15 +1,24 @@
-q=173  ;
-alpha=19 ;
+q = 173
+alpha = 19
 
-#alice
+# Alice
 Xa = 8
-Ya = (alpha^Xa) % q 
-K = (Yb^Xa) % q
+Ya = pow(alpha, Xa, q)  # correct modular exponentiation
 
-#bob
+# Bob
 Xb = 138
-Yb = (alpha^Xb % q) 
-K = (Ya^Xb) % q
+Yb = pow(alpha, Xb, q)  # correct modular exponentiation
+
+# Shared keys
+Ka = pow(Yb, Xa, q)
+Kb = pow(Ya, Xb, q)
+
+print(f'Xa = {Xa}')
+print(f'Ya = {Ya}')
+print(f'Xb = {Xb}')
+print(f'Yb = {Yb}')
+print(f'Ka = {Ka}')
+print(f'Kb = {Kb}')
 
 
 """
