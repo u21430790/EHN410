@@ -1,7 +1,4 @@
 def mod_pow(base, exponent, modulus):
-    """
-    Efficiently calculates (base^exponent) mod modulus using binary exponentiation
-    """
     if modulus == 1:
         return 0
     result = 1
@@ -17,23 +14,14 @@ def mod_pow(base, exponent, modulus):
     return result
 
 def rsa_encrypt(P_i, PU_b, n):
-    """
-    RSA encryption: C = (P_i)^PU_b mod n
-    """
     C = [mod_pow(p, PU_b, n) for p in P_i]
     return C
 
 def rsa_decrypt(C, PR_b, n):
-    """
-    RSA decryption: P_i = (C)^PR_b mod n
-    """
     P_i = [mod_pow(c, PR_b, n) for c in C]
     return P_i
 
 def blocks_to_hex(blocks):
-    """
-    Convert blocks to their hexadecimal representation
-    """
     hex_string = ''.join([format(block, 'X') for block in blocks])
     return hex_string
 

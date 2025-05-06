@@ -1,4 +1,4 @@
-# ANSI X9.17
+# ANSI X9.17 EDE ROUNDS
 
 #QUESTION 1 [30]
 V11= 'FBB36449' #(V1)
@@ -29,7 +29,7 @@ def encrypt_round(input,key):
      
     return f'{int_new^key:08X}'
 
-def decrypt_round(input1,key):
+def decrypt_round(input1,key): 
     xored =int(input1,16)^key
     xored_bin = f'{xored:08X}'
 
