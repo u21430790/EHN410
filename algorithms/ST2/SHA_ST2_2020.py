@@ -34,7 +34,8 @@ def process_block(a,b,c,d,full_word):
         a,b,c,d = process_round(a,b,c,d,block)
         abcd = f'{a:02X}'+ f'{b:02X}' + f'{c:02X}' + f'{d:02X}'
         print(f'round {counter} : {abcd}')
-    a_f ,b_f,c_f,d_f = (a+a_init)%256,(b+b_init)%256,(c+c_init)%256,(d+d_init)%256
+    #a_f ,b_f,c_f,d_f = (a+a_init)%256,(b+b_init)%256,(c+c_init)%256,(d+d_init)%256
+    a_f ,b_f,c_f,d_f = (a^a_init),(b^b_init),(c^c_init),(d^d_init)
     abcd_f  = f'{a_f:02X}'+ f'{b_f:02X}' + f'{c_f:02X}' + f'{d_f:02X}'
     print(f'H {abcd_f}')
     return a_f,b_f,c_f,d_f
