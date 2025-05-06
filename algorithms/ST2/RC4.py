@@ -6,7 +6,7 @@ def rc4_Init_S_T(key) -> np.ndarray: # 1
     T = []
     K = key
     keylen = len(key)
-    for i in range(512):
+    for i in range(256):
         S.append(i)
         T.append(K[i % keylen ])
 
@@ -89,6 +89,6 @@ plaintext_bytes = bytes.fromhex(plaintext)
 #C010000B2A41061000618C28108081CB4445401B12CB1360594481C031A5809B
 
 cipher = rc4_Encrypt_String(plaintext_bytes,K)
-
+print(cipher)
 
 print(rc4_Decrypt_String(bytes.fromhex(cipher),K))
