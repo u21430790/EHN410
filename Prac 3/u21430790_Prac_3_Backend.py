@@ -1,7 +1,15 @@
 import numpy as np
 #from 12345678_Prac_3_RC4 import *
 
-# pads message
+### TEST  DA CODE
+def test():
+    test_str = "Hi, my name is..."
+
+    x = sha_String_To_Hex(test_str)
+    print(x)
+    print(sha_Hex_To_Str(x))
+    return
+
 def sha_Preprocess_Message(inputHex: str) -> str:
     counter = 0
     inputHexBits = bin(int(inputHex,16))[2:]
@@ -174,14 +182,22 @@ def sha_Calculate_Hash(inputHex: str) -> str:
 
 
 def sha_String_To_Hex(inputStr: str) -> str:
-    raise Exception("Not Implemented.")
+    ordArr = [ord(s) for s in inputStr]
+    hexStr = ""
+    for o in ordArr:
+        hexStr+= f'{o:02X}'
+    return hexStr
 
 
 def sha_Image_To_Hex(inputImg: np.ndarray) -> str:
     raise Exception("Not Implemented.")
 
 def sha_Hex_To_Str(inputHex: str) -> str:
-    raise Exception("Not Implemented.")
+    chrStr = ""
+    for i in range(0,len(inputHex),2):
+         chrStr+= chr(int(inputHex[i:i+2],16))
+
+    return chrStr
 
 
 def sha_Hex_To_Im(inputHex: str, originalShape: tuple) -> np.ndarray:
@@ -229,3 +245,4 @@ class Receiver:
             raise Exception("Not Implemented.")
 
 
+test()
