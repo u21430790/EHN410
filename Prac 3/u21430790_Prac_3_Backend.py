@@ -4,10 +4,11 @@ from u21430790_Prac_3_RC4 import *
 ### TEST  DA CODE
 def test():
     test_str = "Hi, my name is..."
-
-    x = sha_String_To_Hex(test_str)
-    print(x)
-    print(sha_Hex_To_Str(x))
+    test_ = "49276D205069636B6C65205269636B21"
+    #x = sha_String_To_Hex(test_str)
+    #print(x)
+    #print(sha_Hex_To_Str(x))
+    x = sha_Calculate_Hash(test_)
     return
 
 def sha_Preprocess_Message(inputHex: str) -> str:
@@ -178,8 +179,25 @@ def sha_Process_Message_Block(inputHex: str, aHex: str, bHex: str, cHex: str, dH
     return a_,b_,c_,d_,e_,f_,g_,h_
 
 def sha_Calculate_Hash(inputHex: str) -> str:
-    raise Exception("Not Implemented.")
+    processed = sha_Preprocess_Message(inputHex)
+    blocks = sha_Create_Message_Blocks(processed)
+    output = ""
+    for b in blocks:
+         IV = []
+         for i in range(0,len(b),len(b)//8):
+              IV.append(b[i:i+(len(b)//8)])
+         a = IV[0]
+         b = IV[1]
+         c = IV[2]
+         d = IV[3]
+         e = IV[4]
+         f = IV[5]
+         g = IV[6]
+         h = IV[7]     
 
+         a,b,c,d,e,f,g,h = sha_Process_Message_Block(b,a,b,c,d,e,f,g,h)
+         output+= a+b+c+d+e+f+g+h
+    return output
 
 def sha_String_To_Hex(inputStr: str) -> str:
     ordArr = [ord(s) for s in inputStr]
