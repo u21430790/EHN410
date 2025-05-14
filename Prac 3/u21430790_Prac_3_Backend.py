@@ -4,29 +4,27 @@ from u21430790_Prac_3_RC4 import *
 ### TEST  DA CODE
 def test():
     test_str = "Hi, my name is..."
-    test_ = "49276D205069636B6C65205269636B21"
+    test_hex = "48656c6c6f20576f726c64"
     #x = sha_String_To_Hex(test_str)
     #print(x)
     #print(sha_Hex_To_Str(x))
-    x = sha_Calculate_Hash(test_)
+    test_long ="7a6f4f3c2b1a096e5d4c3b2a19087f6e5d4c3b2a19087f6e5d4c3b2a19087f6e5d4c3b2a19087f6e5d4c3b2a19087f6e5d4c3b2a19087f6e5d4c3b2a19087f6e5d4c3b2a19087f6e5d4c3b2a19087f6e5d4c3b2a19087f6e5d4c3b2a19087f6e5d4c3b2a19087f6e5d4c3b2a19087f6e5d4c3b2a19087f6e5d4c3b2a19087f6e5d4c3b2a19087f6e5d4c3b2a19087f6e5d4c3b2a19087f6e5d4c3b2a19087f6e5d4c3b2a19087f6e5d4c3b2a19087f6e5d4c3b2a19087f6e5d4c3b2a19087f6e5d4c3b2a19087f6e5d4c3b2a19087f6e5d4c3b2a19087f6e5d4c3b2a19087f6e5d4c3b2a19087f6e5d4c3b2a19087f6e5d4c3b2a19087f6e5d4c3b2a19087f6e5d4c3b2a19087f6e5d4c3b2a19087f6e5d4c3b2a19087f6e5d4c3b2a19087f6e5d4c3b2a19087f6e5d4c3b2a19087f6e5d4c3b2a19087f6e5d4c3b2a19087f6e5d4c3b2a19087f6e5d4c3b2a19087f6e5d4c3b2a19087f6e5d4c3b2a19087f6e5d4c3b2a19087f6e5d4c3b2a19087f6e5d4c3b2a1908"
+    x = sha_Calculate_Hash(test_long)
+    print(x)
     return
 
 def sha_Preprocess_Message(inputHex: str) -> str:
-    counter = 0
-    inputHexBits = bin(int(inputHex,16))[2:]
-    originalLength = len(inputHexBits)
-    while len(inputHexBits) != (896% 1024):
-        counter+=1
-        if counter == 1:
-             inputHexBits+= "1"
-        else:
-             inputHexBits+= "0"
-    inputLenBits = bin(originalLength)[2:].zfill(128)
 
-    inputHexBits+= inputLenBits
-
-    return f'{int(inputHexBits,2):0X}'
-
+    original_length_bits = len(inputHex) * 4
+    padded_hex = inputHex + '8'
+    current_length_bits = len(padded_hex) * 4
+    zero_bits_needed = (896 - (current_length_bits % 1024)) % 1024
+    zero_hex_chars = zero_bits_needed // 4
+    padded_hex += '0' * zero_hex_chars
+    length_hex = format(original_length_bits, '032X')
+    padded_hex += length_hex
+    
+    return padded_hex
 
 def sha_Create_Message_Blocks(inputHex: str) -> np.ndarray:
     length = 1024//4
@@ -48,8 +46,8 @@ def sha_Message_Schedule(inputHex: str) -> np.ndarray:
 def sha_Hash_Round_Function(messageWordHex: str, aHex: str, bHex: str, cHex: str, dHex: str, eHex: str, fHex: str,
                             gHex: str, hHex: str, roundConstantHex: str) -> tuple:
    
-    def rightRotate(hex,shift):
-         bin_list = list(bin(hex)[2:].zfill(64))
+    def rightRotate(hex1,shift):
+         bin_list = list(bin(hex1)[2:].zfill(64))
          shifted = np.roll(bin_list,shift)
          joined = ''.join(shifted)
          int_ans = int(joined,2)
@@ -65,24 +63,24 @@ def sha_Hash_Round_Function(messageWordHex: str, aHex: str, bHex: str, cHex: str
     g = int(gHex,16)
     h = int(hHex,16)
     word = int(messageWordHex,16)
-    key = int(roundConstantHex)
+    key = int(roundConstantHex,16)
 
 
-    CHefg =(e & f)^((~e) & g)
-    MAJabc = (a & b) ^ (a & c) ^ (b ^ c)
+    CHefg =(e & f)^(~e & g)
+    MAJabc = (a & b) ^ (a & c) ^ (b & c)
     sigma512a = rightRotate(a,28) ^ rightRotate(a,34)^rightRotate(a,39)
     sigma512e = rightRotate(e,14) ^ rightRotate(e,18)^rightRotate(e,41)
     T1 = (h+ CHefg +sigma512e + word +key) % (2**64)
     T2 = (sigma512a + MAJabc) % (2**64)
-
-    h = f'{g:0x}'
-    g = f'{f:0x}'
-    f = f'{e:0x}'
-    e = f'{d+T1:0x}'
-    d = f'{c:0x}'
-    c = f'{b:0x}'
-    b = f'{a:0x}'
-    a = f'{T1+T2:0x}'
+    
+    h = f'{g:016x}'
+    g = f'{f:016x}'
+    f = f'{e:016x}'
+    e = f'{(d+T1)% (2**64):016x}'
+    d = f'{c:016x}'
+    c = f'{b:016x}'
+    b = f'{a:016x}'
+    a = f'{(T1+T2)% (2**64):016x}'
 
     return a,b,c,d,e,f,g,h
 
@@ -113,8 +111,8 @@ def sha_F_Function(messageBlock: str, aHex: str, bHex: str, cHex: str, dHex: str
     "4cc5d4becb3e42b6", "597f299cfc657e2a", "5fcb6fab3ad6faec", "6c44198c4a475817"
     ]
 
-    def rightRotate(hex,shift):
-         bin_list = list(bin(int(hex,16))[2:].zfill(64))
+    def rightRotate(hex1,shift):
+         bin_list = list(bin(int(hex1,16))[2:].zfill(64))
          shifted = np.roll(bin_list,shift)
          joined = ''.join(shifted)
          int_ans = int(joined,2)
@@ -125,12 +123,13 @@ def sha_F_Function(messageBlock: str, aHex: str, bHex: str, cHex: str, dHex: str
     for t in range(16):
          words.append(messageSchedule[t])
     for t in range(16,80,1):
-        sigma1 = rightRotate(words[t-2],19)^rightRotate(words[t-2],61)^(int(words[t-2],16) >> 6)
-        sigma0 = rightRotate(words[t-15],1)^rightRotate(words[t-15],8)^(int(words[t-15],16) >> 7)
-        word = (sigma1 + int(words[t-7]) +sigma0 + int(words[t-16],16)) % (2**64)
-        word = f'{word:0X}'
+        sigma1 = (rightRotate(words[t-2],19)^rightRotate(words[t-2],61)^(int(words[t-2],16) >> 6))
+        sigma0 = (rightRotate(words[t-15],1)^rightRotate(words[t-15],8)^(int(words[t-15],16) >> 7))
+        word = (sigma1 + int(words[t-7],16) +sigma0 + int(words[t-16],16)) % (2**64)
+        word = f'{word:016X}'
         words.append(word)
-    
+        
+        
     for w in range(len(words)):
         aHex,bHex,cHex,dHex,eHex,fHex,gHex,hHex = sha_Hash_Round_Function(words[w],aHex,bHex,cHex,dHex,eHex,fHex,gHex,hHex,roundConstants[w])
 
@@ -168,36 +167,33 @@ def sha_Process_Message_Block(inputHex: str, aHex: str, bHex: str, cHex: str, dH
     g_f = (g_in+g)%(2**64)
     h_f = (h_in+h)%(2**64)
 
-    a_ = f'{a_f:0x}'
-    b_ = f'{b_f:0x}'
-    c_ = f'{c_f:0x}'
-    e_ = f'{e_f:0x}'
-    d_ = f'{d_f:0x}'
-    f_ = f'{f_f:0x}'
-    g_ = f'{g_f:0x}'
-    h_ = f'{h_f:0x}'
+    a_ = f'{a_f:016X}'
+    b_ = f'{b_f:016X}'
+    c_ = f'{c_f:016X}'
+    d_ = f'{d_f:016X}'
+    e_ = f'{e_f:016X}'
+    f_ = f'{f_f:016X}'
+    g_ = f'{g_f:016X}'
+    h_ = f'{h_f:016X}'
     return a_,b_,c_,d_,e_,f_,g_,h_
 
 def sha_Calculate_Hash(inputHex: str) -> str:
     processed = sha_Preprocess_Message(inputHex)
     blocks = sha_Create_Message_Blocks(processed)
-    output = ""
+    
+    h0 = "6a09e667f3bcc908"
+    h1 = "bb67ae8584caa73b"
+    h2 = "3c6ef372fe94f82b"
+    h3 = "a54ff53a5f1d36f1"
+    h4 = "510e527fade682d1"
+    h5 = "9b05688c2b3e6c1f"
+    h6 = "1f83d9abfb41bd6b"
+    h7 = "5be0cd19137e2179"
     for b in blocks:
-         IV = []
-         for i in range(0,len(b),len(b)//8):
-              IV.append(b[i:i+(len(b)//8)])
-         a = IV[0]
-         b = IV[1]
-         c = IV[2]
-         d = IV[3]
-         e = IV[4]
-         f = IV[5]
-         g = IV[6]
-         h = IV[7]     
 
-         a,b,c,d,e,f,g,h = sha_Process_Message_Block(b,a,b,c,d,e,f,g,h)
-         output+= a+b+c+d+e+f+g+h
-    return output
+         h0,h1,h2,h3,h4,h5,h6,h7= sha_Process_Message_Block(b,h0,h1,h2,h3,h4,h5,h6,h7)
+         
+    return h0+h1+h2+h3+h4+h5+h6+h7
 
 def sha_String_To_Hex(inputStr: str) -> str:
     ordArr = [ord(s) for s in inputStr]
