@@ -1,5 +1,5 @@
 import numpy as np
-#from 12345678_Prac_3_RC4 import *
+from u21430790_Prac_3_RC4 import *
 
 ### TEST  DA CODE
 def test():
@@ -214,7 +214,7 @@ class Transmitter:
             raise Exception("Not Implemented.")
 
     def encrypt_with_RC4(self, digest: str, key: str) -> np.ndarray:
-            raise Exception("Not Implemented.")
+            return rc4_Encrypt_String(digest,key)
 
 
 class Receiver:
