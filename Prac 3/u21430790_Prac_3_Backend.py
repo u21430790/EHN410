@@ -249,7 +249,7 @@ class Receiver:
             raise Exception("Not Implemented.")
 
     def decrypt_With_RC4(self, digest: np.ndarray, key: str) -> str:
-            raise Exception("Not Implemented.")
+            return rc4_Decrypt_String(digest, key)
 
     def split_Digest(self, digest: str) -> tuple:
             raise Exception("Not Implemented.")
