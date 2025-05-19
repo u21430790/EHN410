@@ -204,8 +204,11 @@ def sha_String_To_Hex(inputStr: str) -> str:
 
 
 def sha_Image_To_Hex(inputImg: np.ndarray) -> str:
-    raise Exception("Not Implemented.")
-
+    img = inputImg.flatten()
+    hexStr = ""
+    for i in img:
+        hexStr+= f"{i:02X}"
+    return hexStr
 def sha_Hex_To_Str(inputHex: str) -> str:
     chrStr = ""
     for i in range(0,len(inputHex),2):
@@ -215,18 +218,33 @@ def sha_Hex_To_Str(inputHex: str) -> str:
 
 
 def sha_Hex_To_Im(inputHex: str, originalShape: tuple) -> np.ndarray:
-    raise Exception("Not Implemented.")
+    byte_values = [int(inputHex[i:i+2], 16) for i in range(0, len(inputHex), 2)]
+    arr = np.array(byte_values, dtype=np.uint8)
+    reshaped_array = arr.reshape(originalShape)
+    
+    return reshaped_array
 
 class Transmitter:
     def __init__(self, ):
         return
 
     def encrypt_With_RSA(self, message: str, RSA_Key: tuple) -> np.ndarray:
-            raise Exception("Not Implemented.")
+            key = RSA_Key[0]
+            n = RSA_Key[1]
+            cipher = [pow(c,key,n) for c in message]
+            return cipher
 
     def create_Digest(self, message) -> str:
-            raise Exception("Not Implemented.")
-
+            if isinstance(message,str):
+                 hexStr = sha_String_To_Hex(message)
+                 digest = sha_Calculate_Hash(hexStr)
+                 return digest
+            
+            if isinstance(message, np.ndarray):
+                 hexStr = sha_Image_To_Hex(message)
+                 digest = sha_Calculate_Hash(hexStr)
+                 return digest
+            
     def encrypt_with_RC4(self, digest: str, key: str) -> np.ndarray:
             return rc4_Encrypt_String(digest,key)
 
@@ -246,7 +264,10 @@ class Receiver:
             raise Exception("Not Implemented.")
 
     def decrypt_With_RSA(self, message: np.ndarray, RSA_Key: tuple) -> str:
-            raise Exception("Not Implemented.")
+            key = RSA_Key[0]
+            n = RSA_Key[1]
+            plaintext = [pow(c,key,n) for c in message]
+            return plaintext
 
     def decrypt_With_RC4(self, digest: np.ndarray, key: str) -> str:
             return rc4_Decrypt_String(digest, key)
