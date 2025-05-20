@@ -229,10 +229,17 @@ class Transmitter:
         return
 
     def encrypt_With_RSA(self, message: str, RSA_Key: tuple) -> np.ndarray:
-            key = RSA_Key[0]
-            n = RSA_Key[1]
-            cipher = [pow(c,key,n) for c in message]
-            return cipher
+        key, n = RSA_Key
+        cipher = []
+
+    # Encrypt every 4 hex digits (2 bytes)
+        for i in range(0, len(message), 4):
+            block = message[i:i+4].zfill(4)  
+            int_block = int(block, 16)
+            encrypted = pow(int_block, key, n)
+            cipher.append(encrypted)
+
+        return cipher
 
     def create_Digest(self, message) -> str:
             if isinstance(message,str):
@@ -267,13 +274,13 @@ class Receiver:
                 return a
             return gcd(b, a % b)    
         
-        def _find_coprime(self, phi):
+        def _find_coprime( phi):
         
             for candidate in np.arange(2, phi):
-                if self._gcd(candidate, phi) == 1:
+                if gcd(candidate, phi) == 1:
                     return int(candidate)
             return 3
-        def _modinv(self, a, m):
+        def _modinv( a, m):
             m0 = m
             x0, x1 = 0, 1
             while a > 1:
@@ -287,18 +294,23 @@ class Receiver:
         self.n = self.p*self.q
         self.phi = (self.p - 1) * (self.q - 1)
 
-        self.e = self._find_coprime(self.phi)
-        self.d = self._modinv(self.e, self.phi)
+        self.e = _find_coprime(self.phi)
+        self.d = _modinv(self.e, self.phi)
 
         self.publicKey = (self.e, self.n)
         self.privateKey = (self.d, self.n)
 
     def decrypt_With_RSA(self, message: np.ndarray, RSA_Key: tuple) -> str:
-            key = RSA_Key[0]
-            n = RSA_Key[1]
-            plaintext = [pow(c,key,n) for c in message]
-            return plaintext
+        key, n = RSA_Key
+        decrypted_hex = ""
 
+        for c in message:
+            int_block = pow(int(c), key, n)
+            hex_block = hex(int_block)[2:].zfill(4)  # ensure 4 hex digits
+            decrypted_hex += hex_block
+
+        return decrypted_hex
+    
     def decrypt_With_RC4(self, digest: np.ndarray, key: str) -> str:
             return rc4_Decrypt_String(digest, key)
 
@@ -308,7 +320,7 @@ class Receiver:
             return message,hashStr
 
     def authenticate_Message(self, digest: str) -> tuple:
-            message,recHashStr  = self.split_Digest(self,digest)
+            message,recHashStr  = self.split_Digest(digest)
             calcHash =sha_Calculate_Hash(message)
             authenticated = recHashStr == calcHash
             return authenticated,message,recHashStr,calcHash

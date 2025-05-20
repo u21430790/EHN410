@@ -40,13 +40,15 @@ def rc4_Encrypt_String(plaintext: str, key: str) -> np.ndarray: # 5
     S_T = rc4_Init_S_T(key)
     S = S_T[0]
     T = S_T[1]
+    #print(f"I AM ENCRYPTING THIS:{plaintext}")
     permuted_S = rc4_Init_Permute_S(S,T)
     cipher = []
     i = 0
     j = 0
-    for char in plaintext:
+    for f in range(0,len(plaintext),2):
         i,j,permuted_S, k = rc4_Generate_Stream_Iteration(i,j,permuted_S)
-        cipher.append(rc4_Process_Byte(int(char,16),k))
+        proc = rc4_Process_Byte(int(plaintext[f:f+2],16),k)
+        cipher.append(f'{proc:02X}')
 
     return np.array(cipher)
 
@@ -55,13 +57,14 @@ def rc4_Decrypt_String(ciphertext: np.ndarray, key: str) -> str: # 6
     S_T = rc4_Init_S_T(key)
     S = S_T[0]
     T = S_T[1]
+    #print(f"I AM DECRYPTING THIS:{ciphertext}")
     permuted_S = rc4_Init_Permute_S(S,T)
     plaintext = ""
     i = 0
     j = 0
     for byte in ciphertext:
         i,j,permuted_S, k = rc4_Generate_Stream_Iteration(i,j,permuted_S)
-        plain_int = rc4_Process_Byte(byte,k)
+        plain_int = rc4_Process_Byte(int(byte,16),k)
 
         plaintext += f"{plain_int:02X}"     
     
