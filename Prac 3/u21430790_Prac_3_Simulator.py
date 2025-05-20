@@ -1,5 +1,5 @@
 from u21430790_Prac_3_Backend import *
-
+import random
 # implement the simulator here.
 print("Welcome.")
 print("To start a secure transmission channel,")
@@ -85,6 +85,17 @@ hash,
 """
 K1 = bytes.fromhex(recRC4_Key).decode('ascii')
 recCipher = rec.decrypt_With_RC4(encryptedDigest,RC4_Key)
+recCipher_bytes = bytearray(recCipher.encode('utf-8'))
+
+# Bit flip: 1 in 10 chance
+if random.randint(1, 10) == 1:
+    print("\n[!] Bit flip triggered!")
+    if len(recCipher_bytes) >= 4:
+        byte_index = random.randint(0, 3)
+        bit_index = random.randint(0, 7)
+        recCipher_bytes[byte_index] ^= 1 << bit_index  # flip a bit
+        recCipher = recCipher_bytes.decode('utf-8', errors='ignore')
+
 messageH,plainhash = rec.split_Digest(recCipher)
 plainMessage = sha_Hex_To_Str(messageH)
 
