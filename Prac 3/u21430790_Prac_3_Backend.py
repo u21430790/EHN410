@@ -237,13 +237,14 @@ class Transmitter:
     def create_Digest(self, message) -> str:
             if isinstance(message,str):
                  hexStr = sha_String_To_Hex(message)
-                 digest = sha_Calculate_Hash(hexStr)
-                 return digest
+                 hashStr = sha_Calculate_Hash(hexStr)
+                 
             
             if isinstance(message, np.ndarray):
                  hexStr = sha_Image_To_Hex(message)
-                 digest = sha_Calculate_Hash(hexStr)
-                 return digest
+                 hashStr = sha_Calculate_Hash(hexStr)
+
+            return hexStr+hashStr
             
     def encrypt_with_RC4(self, digest: str, key: str) -> np.ndarray:
             return rc4_Encrypt_String(digest,key)
@@ -261,7 +262,36 @@ class Receiver:
         self.privateKey = (0, 0)
 
     def generate_RSA_Keys(self, newP: int, newQ: int):
-            raise Exception("Not Implemented.")
+        def gcd(a, b):
+            if b == 0:
+                return a
+            return gcd(b, a % b)    
+        
+        def _find_coprime(self, phi):
+        
+            for candidate in np.arange(2, phi):
+                if self._gcd(candidate, phi) == 1:
+                    return int(candidate)
+            return 3
+        def _modinv(self, a, m):
+            m0 = m
+            x0, x1 = 0, 1
+            while a > 1:
+                q = a // m
+                a, m = m, a % m
+                x0, x1 = x1 - q * x0, x0
+            return int(x1 + m0) if x1 < 0 else int(x1)
+        
+        self.p = newP
+        self.q = newQ
+        self.n = self.p*self.q
+        self.phi = (self.p - 1) * (self.q - 1)
+
+        self.e = self._find_coprime(self.phi)
+        self.d = self._modinv(self.e, self.phi)
+
+        self.publicKey = (self.e, self.n)
+        self.privateKey = (self.d, self.n)
 
     def decrypt_With_RSA(self, message: np.ndarray, RSA_Key: tuple) -> str:
             key = RSA_Key[0]
@@ -273,11 +303,15 @@ class Receiver:
             return rc4_Decrypt_String(digest, key)
 
     def split_Digest(self, digest: str) -> tuple:
-            raise Exception("Not Implemented.")
-
+            hashStr = digest[-128:]
+            message = digest[:-128]
+            return message,hashStr
 
     def authenticate_Message(self, digest: str) -> tuple:
-            raise Exception("Not Implemented.")
+            message,recHashStr  = self.split_Digest(self,digest)
+            calcHash =sha_Calculate_Hash(message)
+            authenticated = recHashStr == calcHash
+            return authenticated,message,recHashStr,calcHash
 
 
 test()

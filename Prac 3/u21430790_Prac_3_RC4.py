@@ -44,9 +44,9 @@ def rc4_Encrypt_String(plaintext: str, key: str) -> np.ndarray: # 5
     cipher = []
     i = 0
     j = 0
-    for char in plaintext.encode('ascii'):
+    for char in plaintext:
         i,j,permuted_S, k = rc4_Generate_Stream_Iteration(i,j,permuted_S)
-        cipher.append(rc4_Process_Byte(char,k))
+        cipher.append(rc4_Process_Byte(int(char,16),k))
 
     return np.array(cipher)
 
@@ -63,7 +63,7 @@ def rc4_Decrypt_String(ciphertext: np.ndarray, key: str) -> str: # 6
         i,j,permuted_S, k = rc4_Generate_Stream_Iteration(i,j,permuted_S)
         plain_int = rc4_Process_Byte(byte,k)
 
-        plaintext += chr(plain_int)     
+        plaintext += f"{plain_int:02X}"     
     
     return plaintext
 
