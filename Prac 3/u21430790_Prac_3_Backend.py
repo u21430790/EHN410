@@ -13,6 +13,28 @@ def test():
     print(x)
     return
 
+def test_sha_functions():
+    # Step 1: Create a dummy image (3x3 grayscale image for simplicity)
+    original_image = np.array([
+        [10, 20, 30],
+        [40, 50, 60],
+        [70, 80, 90]
+    ], dtype=np.uint8)
+
+    # Step 2: Convert image to hex
+    hex_str = sha_Image_To_Hex(original_image)
+    print("Hex String:", hex_str)
+
+    # Step 3: Convert hex string back to image
+    recovered_image = sha_Hex_To_Im(hex_str, original_image.shape)
+    print("Recovered Image:\n", recovered_image)
+
+    # Step 4: Test if original and recovered images are the same
+    assert np.array_equal(original_image, recovered_image), "Mismatch between original and recovered image!"
+    print("✅ Test passed! The original and recovered images match.")
+
+# Run the test
+
 def sha_Preprocess_Message(inputHex: str) -> str:
 
     original_length_bits = len(inputHex) * 4
@@ -35,12 +57,28 @@ def sha_Create_Message_Blocks(inputHex: str) -> np.ndarray:
     return np.array(blocks)
 
 def sha_Message_Schedule(inputHex: str) -> np.ndarray:
+    
+    def rightRotate(hex1,shift):
+         bin_list = list(bin(int(hex1,16))[2:].zfill(64))
+         shifted = np.roll(bin_list,shift)
+         joined = ''.join(shifted)
+         int_ans = int(joined,2)
+
+         return int_ans   
     length = 64//4
     blocks = []
     for i in range(0,len(inputHex),length):
          blocks.append(inputHex[i:i+length])
-    
-    return np.array(blocks)
+    words = []
+    for t in range(16):
+         words.append(blocks[t])
+    for t in range(16,80,1):
+        sigma1 = (rightRotate(words[t-2],19)^rightRotate(words[t-2],61)^(int(words[t-2],16) >> 6))
+        sigma0 = (rightRotate(words[t-15],1)^rightRotate(words[t-15],8)^(int(words[t-15],16) >> 7))
+        word = (sigma1 + int(words[t-7],16) +sigma0 + int(words[t-16],16)) % (2**64)
+        word = f'{word:016X}'
+        words.append(word)
+    return np.array(words)
 
 
 def sha_Hash_Round_Function(messageWordHex: str, aHex: str, bHex: str, cHex: str, dHex: str, eHex: str, fHex: str,
@@ -119,16 +157,17 @@ def sha_F_Function(messageBlock: str, aHex: str, bHex: str, cHex: str, dHex: str
 
          return int_ans   
     messageSchedule = sha_Message_Schedule(messageBlock)
-    words = []
+    words = messageSchedule
+    """
     for t in range(16):
-         words.append(messageSchedule[t])
+         words.append(sha_Message_Schedule(messageBlock))
     for t in range(16,80,1):
         sigma1 = (rightRotate(words[t-2],19)^rightRotate(words[t-2],61)^(int(words[t-2],16) >> 6))
         sigma0 = (rightRotate(words[t-15],1)^rightRotate(words[t-15],8)^(int(words[t-15],16) >> 7))
         word = (sigma1 + int(words[t-7],16) +sigma0 + int(words[t-16],16)) % (2**64)
         word = f'{word:016X}'
         words.append(word)
-        
+    """  
         
     for w in range(len(words)):
         aHex,bHex,cHex,dHex,eHex,fHex,gHex,hHex = sha_Hash_Round_Function(words[w],aHex,bHex,cHex,dHex,eHex,fHex,gHex,hHex,roundConstants[w])
@@ -326,4 +365,5 @@ class Receiver:
             return authenticated,message,recHashStr,calcHash
 
 
-test()
+#test()
+#test_sha_functions()
